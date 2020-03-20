@@ -28,7 +28,6 @@ jobs:
     executor: orb-tools/ubuntu
     steps:
       - checkout
-      - dps/build_docker
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
@@ -71,8 +70,7 @@ workflows:
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
 
-      # an example job
-      - integration-test-1
+      - dps/build_docker
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
@@ -87,7 +85,7 @@ workflows:
           fail-if-semver-not-indicated: true
           publish-version-tag: false
           requires:
-            - integration-test-1
+            - dps/build_docker
           filters:
             branches:
               only: master
