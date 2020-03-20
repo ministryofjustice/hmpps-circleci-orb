@@ -28,7 +28,7 @@ jobs:
     executor: orb-tools/ubuntu
     steps:
       - checkout
-    # - your-orb/your-orb-command
+      - dps/build_docker
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
@@ -84,7 +84,7 @@ workflows:
           orb-name: ministryofjustice/dps
 
           add-pr-comment: false
-          fail-if-semver-not-indicated: false
+          fail-if-semver-not-indicated: true
           publish-version-tag: false
           requires:
             - integration-test-1
