@@ -1,14 +1,15 @@
 version: 2.1
 
 description: >
-  Sample orb description
-  # What will your orb allow users to accomplish?
-  # Descriptions should be short, simple, and informative.
+  Ministry Of Justice - DPS Team orb - common circleci config
 
-# This information will be displayed in the orb registry and is not mandatory.
 display:
-  home_url: "https://www.website.com/docs"
-  source_url: "https://www.github.com/EXAMPLE_ORG/EXAMPLE_PROJECT"
+  home_url: "https://github.com/ministryofjustice/dps-circleci-orb"
+  source_url: "https://github.com/ministryofjustice/dps-circleci-orb"
 
 orbs:
-  hello: circleci/hello-build@0.0.5 # If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
+  mem: circleci/rememborb@0.0.1
+  aws-cli: circleci/aws-cli@0.1.18
+  kubernetes: circleci/kubernetes@0.10.1
+  helm: circleci/helm@0.2.3
+  slack: circleci/slack@3.4.2

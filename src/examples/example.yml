@@ -1,14 +1,18 @@
 description: >
-  Sample example description.
-  # What will this example document?
-  # Descriptions should be short, simple, and clear.
+  CircleCI orb used to store common jobs/commands used by MoJ DPS team projects.
 usage:
   version: 2.1
   orbs:
-    foo: bar/foo@1.2.3
-  jobs:
-    build:
-      machine: true
-      steps:
-        - foo/hello:
-            username: "Anna"
+    dps: ministryofjustice/dps@1.2.3
+  workflows:
+    build-test-and-deploy:
+      jobs:
+        - dps/build_docker:
+            name: build_docker
+            image_name: example_image_name
+        - dps/deploy_to_env:
+            name: deploy_dev
+            env: "dev"
+            app_name: "example_app"
+            requires:
+              - build_docker

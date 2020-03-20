@@ -1,0 +1,13 @@
+description: "Create new application version"
+steps:
+  - run:
+      name: Create app version string
+      command: |
+        DATE=$(date '+%Y-%m-%d')
+        SHORT_SHA1=$(echo $CIRCLE_SHA1 | cut -c1-7)
+        VERSION=${DATE}.${CIRCLE_BUILD_NUM}.${SHORT_SHA1}
+        echo "Created version string: ${VERSION}"
+        echo "export VERSION=$VERSION" >> $BASH_ENV
+  - mem/remember:
+      env_var: APP_VERSION
+      value: "${VERSION}"
