@@ -72,6 +72,7 @@ workflows:
 
       - dps/build_docker:
           image_name: example_image_name
+          publish: false
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
