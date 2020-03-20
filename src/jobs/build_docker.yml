@@ -29,10 +29,11 @@ steps:
   - when:
       condition: <<parameters.publish>>
       steps:
-      - run:
-          name: Publish image to repository
-            #push to quay.io
-            docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-            docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
-            docker push "<< parameters.image_name >>:${APP_VERSION}"
-            docker push "<< parameters.image_name >>:latest"
+        - run:
+            name: Publish image to repository
+            command: |
+              #push to quay.io
+              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+              docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
+              docker push "<< parameters.image_name >>:${APP_VERSION}"
+              docker push "<< parameters.image_name >>:latest"
