@@ -24,10 +24,8 @@ steps:
           --label "build.url=${CIRCLE_BUILD_URL}" \
           --label "build.gitref=${CIRCLE_SHA1}"
 
-        # Copy build-info.json from image
-        docker run -it --rm "<< parameters.image_name >>:${APP_VERSION}" cat /app/build-info.json > build-info.json
-        
-        cat build-info.json
+        # display build-info.json from image
+        docker run -it --rm "<< parameters.image_name >>:${APP_VERSION}" cat /app/build-info.json
 
         #push to quay.io
         docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io

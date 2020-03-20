@@ -1,7 +1,7 @@
 version: 2.1
 
 description: >
-  Ministry Of Justice - DPS Team orb - common circleci config 
+  Ministry Of Justice - DPS Team orb - common circleci config
 
 display:
   home_url: "https://github.com/ministryofjustice/dps-circleci-orb"
