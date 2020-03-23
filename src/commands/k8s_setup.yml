@@ -17,5 +17,4 @@ steps:
           --cluster="${KUBE_ENV_NAME}" \
           --user="circleci" \
           --namespace="${KUBE_ENV_NAMESPACE}"
-        # confirm setup is ok
         kubectl config use-context circleci
