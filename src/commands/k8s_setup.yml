@@ -1,9 +1,6 @@
-description: "Install tools and configure kubectl"
+description: "Install kubectl and configure"
 steps:
-  - aws-cli/install
   - kubernetes/install
-  - helm/install-helm-client:
-      version: v3.0.2
   - run:
       name: Setup kubectl
       command: |

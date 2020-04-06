@@ -1,0 +1,20 @@
+description: >
+  Helm lint - Check for syntax and render issues within the helm Chart
+executor: default
+parameters:
+  env:
+    type: string
+    default: dev
+  chart_name:
+    type: string
+    default: ${CIRCLE_PROJECT_REPONAME}
+  helm_dir:
+    type: string
+    default: helm_deploy
+steps:
+  - checkout
+  - install_helm
+  - run:
+      name: Run helm lint
+      command: helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml --values=secrets-example.yaml
+      working_directory: << parameters.helm_dir >>

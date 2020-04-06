@@ -1,0 +1,4 @@
+description: "Install AWS cli"
+steps:
+  - aws-cli/install:
+      version: "2"
