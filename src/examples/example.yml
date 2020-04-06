@@ -7,6 +7,9 @@ usage:
   workflows:
     build-test-and-deploy:
       jobs:
+        - dps/npm_security_audit
+        - dps/yarn_security_audit
+        - dps/helm_lint
         - dps/build_docker:
             name: build_docker
             image_name: example_image_name
