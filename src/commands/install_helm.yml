@@ -1,0 +1,4 @@
+description: "Install helm client"
+steps:
+  - helm/install-helm-client:
+      version: v3.1.2

@@ -1,4 +1,3 @@
-# How to author Executors: https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
 description: >
   Default executor for deployment jobs
 docker:
