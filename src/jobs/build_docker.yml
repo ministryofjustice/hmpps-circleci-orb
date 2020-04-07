@@ -4,6 +4,7 @@ executor: default
 parameters:
   image_name:
     type: string
+    default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
   publish:
     type: boolean
     default: true
