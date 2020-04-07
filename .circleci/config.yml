@@ -27,7 +27,9 @@ jobs:
   integration-test-1:
     executor: orb-tools/ubuntu
     steps:
-      - checkout
+      - dps/build_docker:
+          image_name: example_image_name
+          publish: false
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
