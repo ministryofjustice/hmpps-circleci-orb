@@ -8,6 +8,18 @@ parameters:
   publish:
     type: boolean
     default: true
+  snyk-scan:
+    type: boolean
+    default: true
+  snyk-target-file:
+    type: string
+    default: Dockerfile
+  snyk-fail-build:
+    type: boolean
+    default: true
+  snyk-threshold:
+    type: string
+    default: high
 steps:
   - checkout
   - setup_remote_docker:
@@ -27,6 +39,19 @@ steps:
           --label "build.number=${CIRCLE_BUILD_NUM}" \
           --label "build.url=${CIRCLE_BUILD_URL}" \
           --label "build.gitref=${CIRCLE_SHA1}"
+
+  - when:
+      condition: << parameters.snyk-scan >>
+      steps:
+        - snyk/scan:
+            organization: "digital-probation-services"
+            project: "${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-docker"
+            docker-image-name: "<< parameters.image_name >>:$APP_VERSION"
+            target-file: << parameters.snyk-target-file >>
+            monitor-on-build: << parameters.publish >>
+            severity-threshold: << parameters.snyk-threshold >>
+            fail-on-issues: << parameters.snyk-fail-build >>
+
   - when:
       condition: <<parameters.publish>>
       steps:
