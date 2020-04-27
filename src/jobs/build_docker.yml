@@ -21,8 +21,9 @@ parameters:
     type: boolean
     default: true
   snyk-threshold:
-    type: string
-    default: high
+    type: enum
+    enum: ["low", "medium", "high"]
+    default: "high"
 steps:
   - checkout
   - setup_remote_docker:

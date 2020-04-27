@@ -38,6 +38,7 @@ jobs:
       - dps/build_docker:
           image_name: example_image_name
           publish: false
+          snyk-threshold: medium
           snyk-fail-build: false
 
 
