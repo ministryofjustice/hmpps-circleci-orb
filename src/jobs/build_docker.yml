@@ -11,6 +11,9 @@ parameters:
   snyk-scan:
     type: boolean
     default: true
+  snyk-org:
+    type: string
+    default: digital-probation-services
   snyk-target-file:
     type: string
     default: Dockerfile
@@ -44,13 +47,13 @@ steps:
       condition: << parameters.snyk-scan >>
       steps:
         - snyk/scan:
-            organization: "digital-probation-services"
-            project: "${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-docker"
+            project: "${CIRCLE_PROJECT_REPONAME}-docker/${CIRCLE_BRANCH}"
+            organization: << parameters.snyk-org >>
             docker-image-name: "<< parameters.image_name >>:$APP_VERSION"
             target-file: << parameters.snyk-target-file >>
-            monitor-on-build: << parameters.publish >>
             severity-threshold: << parameters.snyk-threshold >>
             fail-on-issues: << parameters.snyk-fail-build >>
+            monitor-on-build: << parameters.publish >>
 
   - when:
       condition: <<parameters.publish>>
