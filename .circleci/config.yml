@@ -24,12 +24,6 @@ jobs:
   #
   # Rename this job and add more as needed.
   #
-  integration-test-build_docker:
-    executor: orb-tools/ubuntu
-    steps:
-      - dps/build_docker:
-          image_name: example_image_name
-          publish: false
 
   integration-test-build_docker_snyk:
     executor: orb-tools/ubuntu
@@ -83,8 +77,8 @@ workflows:
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
 
-      - dps/build_docker:
-          publish: false
+      #- dps/build_docker:
+      #    publish: false
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
