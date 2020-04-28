@@ -10,7 +10,7 @@ parameters:
     default: true
   snyk-scan:
     type: boolean
-    default: true
+    default: false
   snyk-org:
     type: string
     default: digital-probation-services

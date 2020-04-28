@@ -30,7 +30,6 @@ jobs:
       - dps/build_docker:
           image_name: example_image_name
           publish: false
-          snyk-scan: false
 
   integration-test-build_docker_snyk:
     executor: orb-tools/ubuntu
@@ -38,6 +37,7 @@ jobs:
       - dps/build_docker:
           image_name: example_image_name
           publish: false
+          snyk-scan: true
           snyk-threshold: medium
           snyk-fail-build: false
 
