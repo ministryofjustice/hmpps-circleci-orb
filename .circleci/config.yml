@@ -92,8 +92,6 @@ workflows:
           add-pr-comment: false
           fail-if-semver-not-indicated: true
           publish-version-tag: false
-          requires:
-            - dps/build_docker
           filters:
             branches:
               only: master
