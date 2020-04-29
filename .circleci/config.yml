@@ -25,15 +25,11 @@ jobs:
   # Rename this job and add more as needed.
   #
 
-  integration-test-build_docker_snyk:
+  integration-tests:
     executor: orb-tools/ubuntu
     steps:
-      - dps/build_docker:
-          image_name: example_image_name
-          publish: false
-          snyk-scan: true
-          snyk-threshold: medium
-          snyk-fail-build: false
+      - dps/install_aws_cli
+      - dps/install_helm
 
 
 workflows:
@@ -76,9 +72,14 @@ workflows:
       # your integration test jobs go here: essentially, run all your orb's
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
+      - integration-tests
 
-      #- dps/build_docker:
-      #    publish: false
+      - dps/build_docker:
+          image_name: example_image_name
+          publish: false
+          snyk-scan: true
+          snyk-threshold: medium
+          snyk-fail-build: false
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
@@ -92,6 +93,8 @@ workflows:
           add-pr-comment: false
           fail-if-semver-not-indicated: true
           publish-version-tag: false
+          requires:
+            - integration-test-build_docker_snyk
           filters:
             branches:
               only: master
