@@ -3,7 +3,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    hmpps: ministryofjustice/hmpps
+    hmpps: ministryofjustice/hmpps@1.3.0
   workflows:
     build-test-and-deploy:
       jobs:
