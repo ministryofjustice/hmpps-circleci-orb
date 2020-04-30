@@ -1,11 +1,11 @@
 version: 2.1
 
 description: >
-  DPS projects reusable circleci config
+  HMPPS projects reusable circleci config
 
 display:
-  home_url: "https://github.com/ministryofjustice/dps-circleci-orb"
-  source_url: "https://github.com/ministryofjustice/dps-circleci-orb"
+  home_url: "https://github.com/ministryofjustice/hmpps-circleci-orb"
+  source_url: "https://github.com/ministryofjustice/hmpps-circleci-orb"
 
 orbs:
   mem: circleci/rememborb@0.0.1

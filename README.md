@@ -1,20 +1,20 @@
-# dps Orb [![CircleCI Build Status](https://circleci.com/gh/ministryofjustice/dps-circleci-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/ministryofjustice/dps-circleci-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/ministryofjustice/dps)](https://circleci.com/orbs/registry/orb/ministryofjustice/dps) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/ministryofjustice/dps-circleci-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+# hmpps Orb [![CircleCI Build Status](https://circleci.com/gh/ministryofjustice/hmpps-circleci-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/ministryofjustice/hmpps-circleci-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/ministryofjustice/hmpps)](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/ministryofjustice/hmpps-circleci-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-DPS circleci orb - reusable config for team projects.
+HMPPS circleci orb - reusable config for hmpps teams. If you would like to start using and contribute to this project please contact the DPS team.
 
 ## Usage
 
-Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/ministryofjustice/dps#usage-examples). Source for these examples can be found within the `src/examples` directory.
+Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps#usage-examples). Source for these examples can be found within the `src/examples` directory.
 
 
 ## Resources
 
-[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/ministryofjustice/dps) - The official registry page of this orb for all versions, executors, commands, and jobs described.  
+[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps) - The official registry page of this orb for all versions, executors, commands, and jobs described.  
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs.  
 
 ### How To Contribute
 
-We welcome [issues](https://github.com/ministryofjustice/dps-circleci-orb/issues) to and [pull requests](https://github.com/ministryofjustice/dps-circleci-orb/pulls) against this repository!
+We welcome [issues](https://github.com/ministryofjustice/hmpps-circleci-orb/issues) to and [pull requests](https://github.com/ministryofjustice/hmpps-circleci-orb/pulls) against this repository!
 
 To publish a new production version:
 * Create a PR to the `Alpha` branch with your changes. This will act as a "staging" branch.

@@ -3,8 +3,8 @@ version: 2.1
 # add your orb below, to be used in integration tests (note: a @dev:alpha
 # release must exist.);
 orbs:
-  dps: ministryofjustice/dps@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@9.0
+  hmpps: ministryofjustice/hmpps@<<pipeline.parameters.dev-orb-version>>
+  orb-tools: circleci/orb-tools@9.1.0
 
 # Pipeline parameters
 parameters:
@@ -28,8 +28,8 @@ jobs:
   integration-tests:
     executor: orb-tools/ubuntu
     steps:
-      - dps/install_aws_cli
-      - dps/install_helm
+      - hmpps/install_aws_cli
+      - hmpps/install_helm
 
 
 workflows:
@@ -51,7 +51,7 @@ workflows:
       # store CIRCLE_TOKEN as a project env var or Contexts resource
       # if using Contexts, add your context below
       - orb-tools/publish-dev:
-          orb-name: ministryofjustice/dps
+          orb-name: ministryofjustice/hmpps
           requires:
             - orb-tools/pack
 
@@ -74,7 +74,7 @@ workflows:
       # integration tests of your choosing
       - integration-tests
 
-      - dps/build_docker:
+      - hmpps/build_docker:
           image_name: example_image_name
           publish: false
           snyk-scan: true
@@ -88,7 +88,7 @@ workflows:
       # be skipped.
       # e.g. [semver:patch] will cause a patch version to be published.
       - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: ministryofjustice/dps
+          orb-name: ministryofjustice/hmpps
 
           add-pr-comment: false
           fail-if-semver-not-indicated: true

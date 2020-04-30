@@ -3,17 +3,17 @@ description: >
 usage:
   version: 2.1
   orbs:
-    dps: ministryofjustice/dps@1.2.3
+    hmpps: ministryofjustice/hmpps@1.3.0
   workflows:
     build-test-and-deploy:
       jobs:
-        - dps/npm_security_audit
-        - dps/yarn_security_audit
-        - dps/helm_lint
-        - dps/build_docker:
+        - hmpps/npm_security_audit
+        - hmpps/yarn_security_audit
+        - hmpps/helm_lint
+        - hmpps/build_docker:
             name: build_docker
             image_name: example_image_name
-        - dps/deploy_to_env:
+        - hmpps/deploy_to_env:
             name: deploy_dev
             env: "dev"
             app_name: "example_app"
