@@ -4,7 +4,7 @@ version: 2.1
 # release must exist.);
 orbs:
   hmpps: ministryofjustice/hmpps@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@9.0
+  orb-tools: circleci/orb-tools@9.1.0
 
 # Pipeline parameters
 parameters:
