@@ -1,4 +1,9 @@
+---
 description: "Install helm client"
+parameters:
+  version:
+    type: string
+    default: "v3.2.0"
 steps:
   - helm/install-helm-client:
-      version: v3.2.0
+      version: <<parameters.version>>

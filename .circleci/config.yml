@@ -30,6 +30,7 @@ jobs:
     steps:
       - hmpps/install_aws_cli
       - hmpps/install_helm
+      - hmpps/k8s_setup
 
 
 workflows:
