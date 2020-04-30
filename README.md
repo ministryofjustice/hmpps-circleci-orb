@@ -6,7 +6,6 @@ HMPPS circleci orb - reusable config for hmpps teams. If you would like to start
 
 Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps#usage-examples). Source for these examples can be found within the `src/examples` directory.
 
-
 ## Resources
 
 [CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps) - The official registry page of this orb for all versions, executors, commands, and jobs described.  
