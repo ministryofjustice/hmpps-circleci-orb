@@ -18,6 +18,9 @@ parameters:
   slack_notification:
     type: boolean
     default: false
+  helm_additional_args:
+    type: string
+    default: ""
 steps:
   - checkout
   - k8s_setup
@@ -35,7 +38,8 @@ steps:
           --install --wait --reset-values --timeout 5m --history-max 10 \
           --values values-<< parameters.env >>.yaml \
           --values - \
-          --set image.tag="${APP_VERSION}"
+          --set image.tag="${APP_VERSION}" \
+          << parameters.helm_additional_args >>
   - when:
       condition: <<parameters.slack_notification>>
       steps:
