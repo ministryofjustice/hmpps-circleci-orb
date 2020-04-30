@@ -94,7 +94,7 @@ workflows:
           fail-if-semver-not-indicated: true
           publish-version-tag: false
           requires:
-            - integration-test-build_docker_snyk
+            - integration-tests
           filters:
             branches:
               only: master
