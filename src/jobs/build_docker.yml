@@ -24,6 +24,9 @@ parameters:
     type: enum
     enum: ["low", "medium", "high"]
     default: "high"
+  snyk-args:
+    type: string
+    default: ""
 steps:
   - checkout
   - setup_remote_docker:
@@ -48,12 +51,13 @@ steps:
       condition: << parameters.snyk-scan >>
       steps:
         - snyk/scan:
-            project: "${CIRCLE_PROJECT_REPONAME}-docker/${CIRCLE_BRANCH}"
+            project: "${CIRCLE_PROJECT_REPONAME}-docker"
             organization: << parameters.snyk-org >>
             docker-image-name: "<< parameters.image_name >>:$APP_VERSION"
             target-file: << parameters.snyk-target-file >>
             severity-threshold: << parameters.snyk-threshold >>
             fail-on-issues: << parameters.snyk-fail-build >>
+            additional-arguments: << parameters.snyk-args >>
             monitor-on-build: << parameters.publish >>
 
   - when:
