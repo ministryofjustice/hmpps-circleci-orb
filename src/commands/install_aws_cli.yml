@@ -1,4 +1,12 @@
+---
 description: "Install AWS cli"
+parameters:
+  version:
+    type: enum
+    default: "2"
+    enum:
+      - "1"
+      - "2"
 steps:
   - aws-cli/install:
-      version: "2"
+      version: <<parameters.version>>

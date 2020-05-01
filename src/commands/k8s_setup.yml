@@ -1,17 +1,37 @@
+---
 description: "Install kubectl and configure"
+parameters:
+  cluster-name:
+    type: env_var_name
+    default: KUBE_ENV_NAME
+  ca-cert:
+    type: env_var_name
+    default: KUBE_ENV_CACERT
+  kube-api:
+    type: env_var_name
+    default: KUBE_ENV_API
+  kube-token:
+    type: env_var_name
+    default: KUBE_ENV_TOKEN
+  kube-namespace:
+    type: env_var_name
+    default: KUBE_ENV_NAMESPACE
+  kube-user:
+    type: string
+    default: circleci
 steps:
   - kubernetes/install
   - run:
       name: Setup kubectl
       command: |
-        echo -n "${KUBE_ENV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
-        kubectl config set-cluster "${KUBE_ENV_NAME}" \
+        echo -n "${<<parameters.ca-cert>>}" | base64 -d > /tmp/cluster_ca.crt
+        kubectl config set-cluster "${<<parameters.cluster-name>>}" \
           --certificate-authority="/tmp/cluster_ca.crt" \
-          --server="${KUBE_ENV_API}"
-        kubectl config set-credentials circleci \
-          --token="${KUBE_ENV_TOKEN}"
+          --server="${<<parameters.kube-api>>}"
+        kubectl config set-credentials <<parameters.kube-user>> \
+          --token="${<<parameters.kube-token>>}"
         kubectl config set-context circleci \
-          --cluster="${KUBE_ENV_NAME}" \
-          --user="circleci" \
-          --namespace="${KUBE_ENV_NAMESPACE}"
+          --cluster="${<<parameters.cluster-name>>}" \
+          --user="<<parameters.kube-user>>" \
+          --namespace="${<<parameters.kube-namespace>>}"
         kubectl config use-context circleci

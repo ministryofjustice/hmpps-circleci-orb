@@ -1,9 +1,10 @@
+---
 description: >
   CircleCI orb used to store common jobs/commands used by MoJ DPS team projects.
 usage:
   version: 2.1
   orbs:
-    hmpps: ministryofjustice/hmpps@1.3.0
+    hmpps: ministryofjustice/hmpps@1.0.0
   workflows:
     build-test-and-deploy:
       jobs:
@@ -13,6 +14,9 @@ usage:
         - hmpps/build_docker:
             name: build_docker
             image_name: example_image_name
+            snyk-scan: true
+            snyk-threshold: high
+            snyk-fail-build: false
         - hmpps/deploy_to_env:
             name: deploy_dev
             env: "dev"

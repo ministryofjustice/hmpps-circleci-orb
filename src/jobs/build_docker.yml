@@ -1,3 +1,4 @@
+---
 description: >
   Build docker image, also creates an app version string and pushes image to repo.
 executor: default
