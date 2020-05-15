@@ -68,6 +68,7 @@ steps:
             name: Publish image to repository
             command: |
               #push to quay.io
+              echo "<< parameters.image_name >>:${APP_VERSION}"
               docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
               docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
