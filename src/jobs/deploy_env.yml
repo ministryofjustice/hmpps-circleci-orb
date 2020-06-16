@@ -22,6 +22,9 @@ parameters:
   helm_additional_args:
     type: string
     default: ""
+  retrieve_secrets:
+    type: string
+    default: "aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | "
 steps:
   - checkout
   - k8s_setup
@@ -34,7 +37,7 @@ steps:
       working_directory: << parameters.helm_dir >>
       command: |
         sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" << parameters.chart_name >>/Chart.yaml
-        aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | \
+        << parameters.retrieve_secrets >> \
         helm upgrade << parameters.release_name >> << parameters.chart_name >> \
           --install --wait --reset-values --timeout 5m --history-max 10 \
           --values values-<< parameters.env >>.yaml \
