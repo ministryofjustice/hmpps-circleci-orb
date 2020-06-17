@@ -24,7 +24,7 @@ parameters:
     default: ""
   retrieve_secrets:
     type: string
-    default: "aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | "
+    default: aws
 steps:
   - checkout
   - k8s_setup
@@ -37,13 +37,22 @@ steps:
       working_directory: << parameters.helm_dir >>
       command: |
         sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" << parameters.chart_name >>/Chart.yaml
-        << parameters.retrieve_secrets >> \
-        helm upgrade << parameters.release_name >> << parameters.chart_name >> \
-          --install --wait --reset-values --timeout 5m --history-max 10 \
-          --values values-<< parameters.env >>.yaml \
-          --values - \
-          --set image.tag="${APP_VERSION}" \
-          << parameters.helm_additional_args >>
+
+        if [[ "<< parameters.retrieve_secrets >>" == 'aws' ]]; then
+          aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | \
+          helm upgrade << parameters.release_name >> << parameters.chart_name >> \
+            --install --wait --reset-values --timeout 5m --history-max 10 \
+            --values values-<< parameters.env >>.yaml \
+            --values - \
+            --set image.tag="${APP_VERSION}" \
+            << parameters.helm_additional_args >>
+        else
+          helm upgrade << parameters.release_name >> << parameters.chart_name >> \
+            --install --wait --reset-values --timeout 5m --history-max 10 \
+            --values values-<< parameters.env >>.yaml \
+            --set image.tag="${APP_VERSION}" \
+            << parameters.helm_additional_args >>
+        fi
   - when:
       condition: <<parameters.slack_notification>>
       steps:
