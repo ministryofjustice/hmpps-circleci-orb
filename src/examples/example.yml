@@ -17,9 +17,9 @@ usage:
             snyk-scan: true
             snyk-threshold: high
             snyk-fail-build: false
-        - hmpps/deploy_to_env:
+        - hmpps/deploy_env:
             name: deploy_dev
             env: "dev"
-            app_name: "example_app"
+            chart_name: "example_app"
             requires:
               - build_docker
