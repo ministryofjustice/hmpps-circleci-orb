@@ -25,20 +25,21 @@ jobs:
   # Rename this job and add more as needed.
   #
 
-  integration-tests:
+  integration-tests-orb-commands:
     executor: orb-tools/ubuntu
     steps:
-      - hmpps/install_aws_cli
-      - hmpps/install_helm
+      - hmpps/create_app_version
       - hmpps/k8s_setup
-
+      - hmpps/install_helm
+      - hmpps/install_aws_cli
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
   lint_pack-validate_publish-dev:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - orb-tools/lint
+      - orb-tools/lint:
+          lint-dir: "src"
       # pack your orb YAML files to a single orb.yml
       # validate the orb.yml file to ensure it is well-formed
       - orb-tools/pack:
@@ -73,14 +74,32 @@ workflows:
       # your integration test jobs go here: essentially, run all your orb's
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
-      - integration-tests
+       
+      # Add any test for orb commands to this job
+      - integration-tests-orb-commands
 
+      # Add test for orb jobs below 
       - hmpps/build_docker:
           image_name: example_image_name
           publish: false
+          dockerfile_dir: tests
           snyk-scan: true
           snyk-threshold: medium
           snyk-fail-build: false
+
+      - hmpps/helm_lint:
+          env: "test"
+          helm_dir: tests/helm_deploy
+          chart_name: test-chart
+
+      - hmpps/deploy_env:
+          env: "test"
+          chart_name: test-chart
+          helm_dir: tests/helm_deploy
+          helm_additional_args: "--dry-run --debug"
+          retrieve_secrets: "none"
+          requires:
+            - hmpps/build_docker
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
@@ -92,10 +111,11 @@ workflows:
           orb-name: ministryofjustice/hmpps
 
           add-pr-comment: false
-          fail-if-semver-not-indicated: true
+          fail-if-semver-not-indicated: false
           publish-version-tag: false
           requires:
-            - integration-tests
+            - hmpps/build_docker
+            - hmpps/deploy_env
           filters:
             branches:
               only: master
