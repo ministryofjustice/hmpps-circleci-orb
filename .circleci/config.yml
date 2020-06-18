@@ -25,11 +25,13 @@ jobs:
   # Rename this job and add more as needed.
   #
 
-  #integration-tests-orb-commands:
-  #  executor: orb-tools/ubuntu
-  #  steps:
-  #    - hmpps/command_to_test
-
+  integration-tests-orb-commands:
+    executor: orb-tools/ubuntu
+    steps:
+      - hmpps/create_app_version
+      - hmpps/k8s_setup
+      - hmpps/install_helm
+      - hmpps/install_aws_cli
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
@@ -72,9 +74,11 @@ workflows:
       # your integration test jobs go here: essentially, run all your orb's
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
+       
+      # Add any test for orb commands to this job
+      - integration-tests-orb-commands
 
-      #- integration-tests
-
+      # Add test for orb jobs below 
       - hmpps/build_docker:
           image_name: example_image_name
           publish: false
