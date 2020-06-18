@@ -58,7 +58,7 @@ steps:
             project: "${CIRCLE_PROJECT_REPONAME}-docker"
             organization: << parameters.snyk-org >>
             docker-image-name: "<< parameters.image_name >>:$APP_VERSION"
-            target-file: << parameters.snyk-target-file >>
+            target-file: << parameters.dockerfile_dir >>/<< parameters.snyk-target-file >>
             severity-threshold: << parameters.snyk-threshold >>
             fail-on-issues: << parameters.snyk-fail-build >>
             additional-arguments: << parameters.snyk-args >>
