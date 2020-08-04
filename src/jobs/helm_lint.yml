@@ -1,7 +1,7 @@
 ---
 description: >
   Helm lint - Check for syntax and render issues within the helm Chart
-executor: default
+executor: default_small
 parameters:
   env:
     type: string
