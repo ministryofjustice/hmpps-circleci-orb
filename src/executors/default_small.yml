@@ -1,0 +1,11 @@
+---
+description: >
+  Executor for deployment jobs using the small resource class
+docker:
+  - image: 'circleci/python:<<parameters.tag>>'
+working_directory: ~/app
+resource_class: small
+parameters:
+  tag:
+    default: "3"
+    type: string
