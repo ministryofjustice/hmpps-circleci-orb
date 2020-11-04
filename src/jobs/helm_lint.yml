@@ -12,10 +12,13 @@ parameters:
   helm_dir:
     type: string
     default: helm_deploy
+  helm_additional_args:
+    type: string
+    default: "--values=secrets-example.yaml"
 steps:
   - checkout
   - install_helm
   - run:
       name: Run helm lint
-      command: helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml --values=secrets-example.yaml
+      command: helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml << parameters.helm_additional_args >>
       working_directory: << parameters.helm_dir >>
