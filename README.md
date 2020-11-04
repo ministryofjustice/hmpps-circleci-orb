@@ -6,6 +6,21 @@ HMPPS circleci orb - reusable config for hmpps teams. If you would like to start
 
 Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps#usage-examples). Source for these examples can be found within the `src/examples` directory.
 
+## Known Issue
+
+You may get this error when pushing a new PR, 
+
+```
+The dev version of ministryofjustice/hmpps@dev:alpha has expired. Dev versions of orbs are only valid for 90 days after publishing.
+```
+
+If you see this error, you need to publish a dev:alpha version manually. The fix is to run this:
+
+```
+circleci orb publish ./src/@orb.yml ministryofjustice/hmpps@dev:alpha
+```
+
+
 ## Resources
 
 [CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps) - The official registry page of this orb for all versions, executors, commands, and jobs described.  
