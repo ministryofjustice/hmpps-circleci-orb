@@ -17,7 +17,7 @@ The dev version of ministryofjustice/hmpps@dev:alpha has expired. Dev versions o
 If you see this error, you need to publish a dev:alpha version manually. The fix is to run this:
 
 ```
-circleci orb publish ./src/@orb.yml ministryofjustice/hmpps@dev:alpha
+circleci config pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:alpha
 ```
 
 
