@@ -19,6 +19,11 @@ parameters:
   slack_notification:
     type: boolean
     default: false
+    description: When true, notifies a Slack channel after every deployment done with this job.
+  slack_channel_name:
+    type: string
+    default: dps-releases
+    description: Slack channel to use for deployment notifications.
   helm_additional_args:
     type: string
     default: ""
@@ -57,6 +62,34 @@ steps:
       condition: <<parameters.slack_notification>>
       steps:
         - slack/notify:
-            message: "*<< parameters.release_name >>* version:*${APP_VERSION}* deployed to << parameters.env >>"
-            include_project_field: false
-            include_job_number_field: false
+            event: always
+            channel: << parameters.slack_channel_name >>
+            custom: |
+              {
+                "blocks": [
+                  {
+                    "type": "context",
+                    "elements": [
+                      {
+                        "type": "mrkdwn",
+                        "text": ":circleci-${CCI_STATUS}: CircleCI deploy ${CCI_STATUS}"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*<< parameters.release_name >>* version `${APP_VERSION}` deploy to _<< parameters.env >>_"
+                    },
+                    "accessory": {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View job"
+                      },
+                      "url": "$CIRCLE_BUILD_URL"
+                    }
+                  }
+                ]
+              }

@@ -74,11 +74,11 @@ workflows:
       # your integration test jobs go here: essentially, run all your orb's
       # jobs and commands to ensure they behave as expected. or, run other
       # integration tests of your choosing
-       
+
       # Add any test for orb commands to this job
       - integration-tests-orb-commands
 
-      # Add test for orb jobs below 
+      # Add test for orb jobs below
       - hmpps/build_docker:
           image_name: example_image_name
           publish: false
@@ -98,8 +98,12 @@ workflows:
           helm_dir: tests/helm_deploy
           helm_additional_args: "--dry-run --debug"
           retrieve_secrets: "none"
+          slack_notification: true
+          slack_channel_name: test
           requires:
             - hmpps/build_docker
+          context:
+            - moj-slack-notifications
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
@@ -119,4 +123,3 @@ workflows:
           filters:
             branches:
               only: master
-
