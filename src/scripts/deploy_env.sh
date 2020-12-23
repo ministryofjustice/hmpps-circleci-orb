@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ ${RELEASE_NAME} == "PROJECT_NAME_ENV_NAME" ]]; then
+  RELEASE_NAME="${CIRCLE_PROJECT_REPONAME}-${ENV_NAME}"
+fi
+
+if [[ ${CHART_NAME} == "PROJECT_NAME" ]]; then
+  CHART_NAME="${CIRCLE_PROJECT_REPONAME}"
+fi
+
+
 if [[ ${HELM_REPO} != "local" ]]; then
   helm repo add remote "${HELM_REPO}"
   CHART_NAME="remote/${CHART_NAME}"
