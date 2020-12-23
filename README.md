@@ -18,7 +18,7 @@ If you see this error, you need to publish a dev:alpha version manually. The fix
 
 ```
 circleci orb pack ./src | circleci orb validate -
-circleci config pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:alpha
+circleci orb pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:alpha
 ```
 
 
