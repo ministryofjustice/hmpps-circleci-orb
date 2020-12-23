@@ -15,14 +15,17 @@ fi
 helm dependency update "${CHART_NAME}"
 
 HELM_ARGS=("${CHART_VERSION_ARG}" \
-  --wait \
-  --install \
-  --reset-values \
-  --timeout 5m \
-  --history-max 10 \
-  --values "values-${ENV_NAME}.yaml" \
-  --set image.tag="${APP_VERSION}" \
-  "${HELM_ADDITIONAL_ARGS}")
+  "--wait" \
+  "--install" \
+  "--reset-values" \
+  "--timeout 5m" \
+  "--history-max 10" \
+  "--values values-${ENV_NAME}.yaml" \
+  "--set image.tag=${APP_VERSION}")
+
+read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
+
+HELM_ARGS+=("${extra_args[@]}")
 
 if [[ "${RETRIEVE_SECRETS}" == 'aws' ]]; then
   # Load secrets from AWS secrets manager and have helm read values from stdin
