@@ -8,11 +8,11 @@ parameters:
     type: string
     default: dev
   release_name:
-    type: string
-    default: ${CIRCLE_PROJECT_REPONAME}
+    type: env_var_name
+    default: CIRCLE_PROJECT_REPONAME
   chart_name:
-    type: string
-    default: ${CIRCLE_PROJECT_REPONAME}
+    type: env_var_name
+    default: CIRCLE_PROJECT_REPONAME
   chart_version:
     type: string
     default: latest
