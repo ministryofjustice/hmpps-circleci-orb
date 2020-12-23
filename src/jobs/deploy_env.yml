@@ -13,6 +13,13 @@ parameters:
   chart_name:
     type: string
     default: ${CIRCLE_PROJECT_REPONAME}
+  chart_version:
+    type: string
+    default: latest
+  helm_repo:
+    type: string
+    default: local
+    description: For using non local helm chart set to URL of helm repo
   helm_dir:
     type: string
     default: helm_deploy
@@ -40,24 +47,15 @@ steps:
   - deploy:
       name: Deploy to << parameters.env >>
       working_directory: << parameters.helm_dir >>
-      command: |
-        sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" << parameters.chart_name >>/Chart.yaml
-
-        if [[ "<< parameters.retrieve_secrets >>" == 'aws' ]]; then
-          aws secretsmanager get-secret-value --secret-id ${AWS_SECRET_NAME} | jq -r .SecretString | \
-          helm upgrade << parameters.release_name >> << parameters.chart_name >> \
-            --install --wait --reset-values --timeout 5m --history-max 10 \
-            --values values-<< parameters.env >>.yaml \
-            --values - \
-            --set image.tag="${APP_VERSION}" \
-            << parameters.helm_additional_args >>
-        else
-          helm upgrade << parameters.release_name >> << parameters.chart_name >> \
-            --install --wait --reset-values --timeout 5m --history-max 10 \
-            --values values-<< parameters.env >>.yaml \
-            --set image.tag="${APP_VERSION}" \
-            << parameters.helm_additional_args >>
-        fi
+      environment:
+        RELEASE_NAME: << parameters.release_name >>
+        CHART_NAME: << parameters.chart_name >>
+        CHART_VERSION: << parameters.chart_version >>
+        HELM_REPO: << parameters.helm_repo >>
+        ENV_NAME: << parameters.env >>
+        HELM_ADDITIONAL_ARGS: << parameters.helm_additional_args >>
+        RETRIEVE_SECRETS: << parameters.retrieve_secrets >>
+      command: <<include(scripts/deploy_env.sh)>>
   - when:
       condition: <<parameters.slack_notification>>
       steps:
@@ -80,7 +78,7 @@ steps:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "*<< parameters.release_name >>* version `${APP_VERSION}` deploy to _<< parameters.env >>_"
+                      "text": "*<< parameters.release_name >>* version `${APP_VERSION}` deploy to *<< parameters.env >>*"
                     },
                     "accessory": {
                       "type": "button",

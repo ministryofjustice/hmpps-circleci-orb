@@ -19,6 +19,6 @@ usage:
             slack_notification: true
             slack_channel_name: your-notification-channel
             context:
-              - moj-slack-notifications
+              - hmpps-common-vars
             requires:
               - build_docker
