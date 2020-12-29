@@ -78,7 +78,7 @@ steps:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "*<< parameters.release_name >>* version `${APP_VERSION}` deploy to *<< parameters.env >>*"
+                      "text": "*${CIRCLE_PROJECT_REPONAME}* version `${APP_VERSION}` deploy to *<< parameters.env >>*"
                     },
                     "accessory": {
                       "type": "button",
@@ -86,7 +86,7 @@ steps:
                         "type": "plain_text",
                         "text": "View job"
                       },
-                      "url": "$CIRCLE_BUILD_URL"
+                      "url": "${CIRCLE_BUILD_URL}"
                     }
                   }
                 ]
