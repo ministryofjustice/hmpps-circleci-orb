@@ -2,6 +2,8 @@
 
 if [[ ${RELEASE_NAME} == "PROJECT_NAME_ENV_NAME" ]]; then
   RELEASE_NAME="${CIRCLE_PROJECT_REPONAME}-${ENV_NAME}"
+elif [[ ${RELEASE_NAME} == "PROJECT_NAME" ]]; then
+  RELEASE_NAME="${CIRCLE_PROJECT_REPONAME}"
 fi
 
 if [[ ${CHART_NAME} == "PROJECT_NAME" ]]; then
@@ -12,6 +14,7 @@ if [[ ${HELM_REPO} != "local" ]]; then
   helm repo add remote "${HELM_REPO}"
   CHART_NAME="remote/${CHART_NAME}"
 else
+  # this is a hack to allow seeing the actual app version in the helm release metadata
   sed -i "s/appVersion:.*/appVersion: \"${APP_VERSION}\"/g" "${CHART_NAME}/Chart.yaml"
 fi
 
@@ -31,7 +34,7 @@ read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
 HELM_ARGS+=("${extra_args[@]}")
 
 if [[ ${CHART_VERSION} != "latest" ]]; then
-  HELM_ARGS+=("--version ${CHART_VERSION}")
+  HELM_ARGS+=("--version" "${CHART_VERSION}")
 fi
 
 if [[ "${RETRIEVE_SECRETS}" == 'aws' ]]; then

@@ -9,7 +9,7 @@ parameters:
     default: dev
   release_name:
     type: string
-    default: PROJECT_NAME_ENV_NAME
+    default: PROJECT_NAME
   chart_name:
     type: string
     default: PROJECT_NAME
