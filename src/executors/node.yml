@@ -2,9 +2,9 @@
 description: >
   Default executor for node.js jobs
 docker:
-  - image: 'circleci/node:<<parameters.tag>>'
+  - image: 'cimg/node:<<parameters.tag>>'
 working_directory: ~/app
 parameters:
   tag:
-    default: "10-buster-browsers"
+    default: "10.23-browsers"
     type: string
