@@ -1,0 +1,33 @@
+---
+description: >
+  Runs the smoke test for this project
+executor: java
+parameters:
+  command:
+    type: string
+    default: "./gradlew testSmoke -Dtestlogger.showStandardStreams=true"
+  gradlefile:
+    type: string
+    default: "build.gradle.kts"
+  cachekey:
+    type: string
+    default: "gradle-"
+  cachepath:
+    type: string
+    default: "~/.gradle"
+steps:
+  - checkout
+  - restore_cache:
+      keys:
+        - gradle-{{ checksum "<< parameters.gradlefile >>" }}
+        - << parameters.cachekey >>
+  - run:
+      command: << parameters.command >>
+  - save_cache:
+      paths:
+        - << parameters.cachepath >>
+      key: gradle-{{ checksum "<< parameters.gradlefile >>" }}
+  - store_test_results:
+      path: build/test-results
+  - store_artifacts:
+      path: build/reports/tests
