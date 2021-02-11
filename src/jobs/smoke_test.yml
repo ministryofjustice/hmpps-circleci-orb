@@ -6,10 +6,10 @@ parameters:
   command:
     type: string
     default: "./gradlew testSmoke -Dtestlogger.showStandardStreams=true"
-  cachekey:
+  gradlefile:
     type: string
-    default: "gradle-{{ checksum "build.gradle.kts" }}"
-  cachekey2:
+    default: "build.gradle.kts"
+  cachekey:
     type: string
     default: "gradle-"
   cachepath:
@@ -19,14 +19,14 @@ steps:
   - checkout
   - restore_cache:
       keys:
+        - gradle-{{ checksum "<< parameters.gradlefile >>" }}
         - << parameters.cachekey >>
-        - << parameters.cachekey2 >>
   - run:
       command: << parameters.command >>
   - save_cache:
       paths:
         - << parameters.cachepath >>
-      key: << parameters.cachekey >>
+      key: gradle-{{ checksum "<< parameters.gradlefile >>" }}
   - store_test_results:
       path: build/test-results
   - store_artifacts:
