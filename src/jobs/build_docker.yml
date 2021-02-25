@@ -40,7 +40,8 @@ steps:
       name: Build container image
       command: |
         IMAGE_NAME="<< parameters.image_name >>"
-        docker build --rm=false << parameters.dockerfile_dir >> \
+        docker build --pull \
+          --rm=false << parameters.dockerfile_dir >> \
           --build-arg BUILD_NUMBER=$APP_VERSION \
           --build-arg GIT_REF=$CIRCLE_SHA1 \
           --tag "<< parameters.image_name >>:${APP_VERSION}" \
