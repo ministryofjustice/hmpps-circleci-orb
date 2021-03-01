@@ -86,7 +86,6 @@ workflows:
           chart_name: test-chart
           helm_dir: tests/helm_deploy
           helm_additional_args: "--dry-run --debug"
-          retrieve_secrets: "none"
           slack_notification: true
           slack_channel_name: dps_alerts_non_prod
           requires:
