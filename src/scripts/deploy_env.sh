@@ -37,10 +37,4 @@ if [[ ${CHART_VERSION} != "latest" ]]; then
   HELM_ARGS+=("--version" "${CHART_VERSION}")
 fi
 
-if [[ "${RETRIEVE_SECRETS}" == 'aws' ]]; then
-  # Load secrets from AWS secrets manager and have helm read values from stdin
-  aws secretsmanager get-secret-value --secret-id "${AWS_SECRET_NAME}" | jq -r .SecretString | \
-  helm upgrade "${RELEASE_NAME}" "${CHART_NAME}" --values - "${HELM_ARGS[@]}"
-else
-  helm upgrade "${RELEASE_NAME}" "${CHART_NAME}" "${HELM_ARGS[@]}"
-fi
+helm upgrade "${RELEASE_NAME}" "${CHART_NAME}" "${HELM_ARGS[@]}"

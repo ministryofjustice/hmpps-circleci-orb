@@ -34,9 +34,6 @@ parameters:
   helm_additional_args:
     type: string
     default: ""
-  retrieve_secrets:
-    type: string
-    default: aws
 steps:
   - checkout
   - k8s_setup
@@ -54,7 +51,6 @@ steps:
         HELM_REPO: << parameters.helm_repo >>
         ENV_NAME: << parameters.env >>
         HELM_ADDITIONAL_ARGS: << parameters.helm_additional_args >>
-        RETRIEVE_SECRETS: << parameters.retrieve_secrets >>
       command: <<include(scripts/deploy_env.sh)>>
   - when:
       condition: <<parameters.slack_notification>>

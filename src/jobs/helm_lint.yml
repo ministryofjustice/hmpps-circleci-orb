@@ -14,7 +14,7 @@ parameters:
     default: helm_deploy
   helm_additional_args:
     type: string
-    default: "--values=secrets-example.yaml"
+    default: ""
 steps:
   - checkout
   - install_helm
