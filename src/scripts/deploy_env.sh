@@ -26,8 +26,14 @@ HELM_ARGS=(--wait \
   --reset-values \
   --timeout 5m \
   --history-max 10 \
-  --values "values-${ENV_NAME}.yaml" \
-  --set "image.tag=${APP_VERSION}")
+  --values "values-${ENV_NAME}.yaml")
+
+# Set the image tag for this deployment
+if helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
+  HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
+else
+  HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
+fi
 
 read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
 
