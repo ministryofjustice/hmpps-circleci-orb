@@ -9,7 +9,6 @@ usage:
     build-test-and-deploy:
       jobs:
         - hmpps/npm_security_audit
-        - hmpps/yarn_security_audit
         - hmpps/helm_lint
         - hmpps/build_docker:
             name: build_docker

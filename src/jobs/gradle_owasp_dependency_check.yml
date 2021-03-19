@@ -1,0 +1,90 @@
+---
+description: >
+  Job for running OWASP Dependency Check, looking for package dependencies with security vulnerabilities
+executor: java
+parameters:
+  executor:
+    description: The name of custom executor to use.
+    type: executor
+    default: default
+  cve_data_directory:
+    description: The plugin database directory.
+    type: string
+    default: "~/.gradle/dependency-check-data"
+  task:
+    description: Task name.
+    type: string
+    default: "dependencyCheckAnalyze"
+  cache_key:
+    description: Specify a custom cache key.
+    type: string
+    default: "v1"
+  no_output_timeout:
+    description: Specify period of time has passed with no output.
+    type: string
+    default: "15m"
+  persist_to_workspace:
+    description: Persist reports to workspace for further processing.
+    type: boolean
+    default: false
+  slack_channel:
+    type: string
+    default: dps_alerts_security
+    description: Slack channel to use for notifications.
+steps:
+  - checkout
+  - gradle/with_cache:
+      steps:
+        - owasp/generate_cache_keys:
+            cache_key: gradle-<< parameters.cache_key >>-cache-key
+        - owasp/restore_owasp_cache:
+            cache_key: << parameters.cache_key >>
+        - run:
+            name: Update OWASP Dependency-Check Database
+            command: ./gradlew :dependencyCheckUpdate --info
+        - owasp/store_owasp_cache:
+            cve_data_directory: <<parameters.cve_data_directory>>
+            cache_key: << parameters.cache_key >>
+        - run:
+            name: Run OWASP Dependency-Check Analyzer
+            no_output_timeout: << parameters.no_output_timeout >>
+            command: ./gradlew <<parameters.task>> --info
+        - run:
+            # note: Also run purge so so that vulnerability data is not cached twice.
+            # Run in separate step so not run for each submodule.
+            name: OWASP Dependency-Check cache cleanup
+            command: ./gradlew :dependencyCheckPurge --info
+        - owasp/collect_reports:
+            persist_to_workspace: <<parameters.persist_to_workspace>>
+  - slack/notify:
+      event: fail
+      channel: << parameters.slack_channel >>
+      custom: |
+        {
+          "blocks": [
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "View job"
+                },
+                "url": "${CIRCLE_BUILD_URL}"
+              }
+            }
+          ]
+        }
