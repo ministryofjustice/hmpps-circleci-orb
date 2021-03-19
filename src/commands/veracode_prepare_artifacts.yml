@@ -1,0 +1,23 @@
+---
+description: >
+  This command collects app artifacts and creates a zip
+  file which is then used by veracode SAST scan.
+parameters:
+  docker_image_app_dir:
+    description: Directory inside the docker image where the application artifacts are saved
+    type: string
+    default: "/app"
+steps:
+  - setup_remote_docker:
+      docker_layer_caching: true
+  - checkout
+  - run:
+      name: Build temp docker image and copy app files
+      command: |
+        IMAGE_ID=$(docker build -q . --build-arg BUILD_NUMBER=$CIRCLE_SHA1 --build-arg GIT_REF=$CIRCLE_SHA1)
+        docker cp $(docker create --rm ${IMAGE_ID}):<< parameters.docker_image_app_dir >> ./temp_app
+  - run:
+      name: Zip files ready for Veracode scan
+      command: |
+         cd temp_app
+         zip -r ../source.zip . -x "*node_modules*" -x "*agent.jar*"
