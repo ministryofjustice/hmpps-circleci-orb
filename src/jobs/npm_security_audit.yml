@@ -20,4 +20,32 @@ steps:
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
-      template: basic_fail_1
+      custom: |
+        {
+          "blocks": [
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "View job"
+                },
+                "url": "${CIRCLE_BUILD_URL}"
+              }
+            }
+          ]
+        }
