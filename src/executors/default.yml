@@ -2,9 +2,9 @@
 description: >
   Default executor for deployment jobs
 docker:
-  - image: 'circleci/python:<<parameters.tag>>'
+  - image: 'cimg/python:<<parameters.tag>>'
 working_directory: ~/app
 parameters:
   tag:
-    default: "3"
+    default: "3.9"
     type: string
