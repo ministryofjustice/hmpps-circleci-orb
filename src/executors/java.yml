@@ -6,5 +6,5 @@ environment:
 working_directory: ~/app
 parameters:
   tag:
-    default: "11-0"
+    default: "11.0"
     type: string
