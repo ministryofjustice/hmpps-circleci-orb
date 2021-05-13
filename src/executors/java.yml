@@ -1,10 +1,10 @@
 ---
 docker:
-  - image: circleci/openjdk:<<parameters.tag>>
+  - image: cimg/openjdk:<<parameters.tag>>
 environment:
-  _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-XX:+UseContainerSupport
+  _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
 working_directory: ~/app
 parameters:
   tag:
-    default: "11-jdk"
+    default: "11.0"
     type: string

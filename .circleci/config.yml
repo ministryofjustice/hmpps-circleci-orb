@@ -111,4 +111,4 @@ workflows:
             - hmpps/deploy_env
           filters:
             branches:
-              only: master
+              only: main

@@ -1,7 +1,9 @@
 ---
 description: >
   Runs the smoke test for this project
-executor: java
+executor:
+  name: java
+  tag: <<parameters.jdk_tag>>
 parameters:
   command:
     type: string
@@ -15,6 +17,9 @@ parameters:
   cachepath:
     type: string
     default: "~/.gradle"
+  jdk_tag:
+    default: "11.0"
+    type: string
 steps:
   - checkout
   - restore_cache:
