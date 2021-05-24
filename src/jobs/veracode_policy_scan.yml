@@ -7,8 +7,13 @@ parameters:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
+  docker_image_app_dir:
+    description: Directory inside the docker image where the application artifacts are saved
+    type: string
+    default: "/app"
 steps:
-  - veracode_prepare_artifacts
+  - veracode_prepare_artifacts:
+      docker_image_app_dir: << parameters.docker_image_app_dir >>
   - run:
       name: "Download/Extract veracode agent"
       command: |
