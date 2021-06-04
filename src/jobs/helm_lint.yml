@@ -20,5 +20,7 @@ steps:
   - install_helm
   - run:
       name: Run helm lint
-      command: helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml << parameters.helm_additional_args >>
+      command: |
+        helm dependency update << parameters.chart_name >>
+        helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml << parameters.helm_additional_args >>
       working_directory: << parameters.helm_dir >>
