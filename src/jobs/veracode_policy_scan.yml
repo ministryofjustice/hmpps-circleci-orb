@@ -7,6 +7,11 @@ parameters:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
+  teams:
+    default: "hmpps-tech"
+    description: |
+                    Comma-separated list of team names associated with the specified application. Validates against the names of existing teams for this account.
+    type: string
   docker_image_app_dir:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
@@ -24,6 +29,7 @@ steps:
         java -jar VeracodeJavaAPI.jar \
         -vid "${VERACODE_API_ID}" \
         -vkey "${VERACODE_API_KEY}" \
+        -teams "<< parameters.teams >>" \
         -action uploadandscan \
         -appname ${CIRCLE_PROJECT_REPONAME} \
         -createprofile true \
