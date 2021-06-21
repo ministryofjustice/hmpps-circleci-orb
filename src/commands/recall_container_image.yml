@@ -1,0 +1,18 @@
+---
+description: >
+  Recalls the built container image (tagged as "${IMAGE_NAME}:${APP_VERSION}"
+  in the environment) within the circleci workspace so that it can be used in
+  a subsequent job.
+
+  NOTE: You MUST have ran your `build_docker` job with the parameter
+  `persist_container_image` set to `true`.
+steps:
+  - attach_workspace:
+      at: ~/app
+  - run:
+      name: Extract saved container image
+      command: docker load --input docker_cache/build_image.tar
+  - mem/recall:
+      env_var: IMAGE_NAME
+  - mem/recall:
+      env_var: APP_VERSION

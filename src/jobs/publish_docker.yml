@@ -1,0 +1,29 @@
+---
+description: >
+  Pushes the built container image to the repository.
+
+  NOTE: You MUST have ran your `build_docker` job with the parameter
+  `persist_container_image` set to `true`.
+executor: default_small
+parameters:
+  publish_latest_tag:
+    type: boolean
+    default: true
+steps:
+  - checkout
+  - setup_remote_docker
+  - recall_container_image
+  - run:
+      name: Publish image to repository
+      command: |
+        docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+        docker push "${IMAGE_NAME}:${APP_VERSION}"
+
+  - when:
+      condition: << parameters.publish_latest_tag >>
+      steps:
+        - run:
+            name: Publish `latest` tag to repository
+            command: |
+              docker tag "${IMAGE_NAME}:${APP_VERSION}" "${IMAGE_NAME}:latest"
+              docker push "${IMAGE_NAME}:latest"
