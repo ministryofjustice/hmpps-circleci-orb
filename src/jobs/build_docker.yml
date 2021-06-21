@@ -12,6 +12,10 @@ parameters:
   publish:
     type: boolean
     default: true
+  persist_container_image:
+    type: boolean
+    default: false
+    description: Make the built container image available for subsequent jobs
   snyk-scan:
     type: boolean
     default: false
@@ -37,14 +41,21 @@ steps:
       docker_layer_caching: true
   - create_app_version
   - run:
-      name: Build container image
+      name: Create IMAGE_NAME env var
       command: |
         IMAGE_NAME="<< parameters.image_name >>"
+        echo "export IMAGE_NAME=$IMAGE_NAME" >> $BASH_ENV
+  - mem/remember:
+      env_var: IMAGE_NAME
+      value: "${IMAGE_NAME}"
+  - run:
+      name: Build container image
+      command: |
         docker build --pull \
           --rm=false << parameters.dockerfile_dir >> \
           --build-arg BUILD_NUMBER=$APP_VERSION \
           --build-arg GIT_REF=$CIRCLE_SHA1 \
-          --tag "<< parameters.image_name >>:${APP_VERSION}" \
+          --tag "${IMAGE_NAME}:${APP_VERSION}" \
           --label "maintainer=dps-hmpps@digital.justice.gov.uk" \
           --label "app.version=${APP_VERSION}" \
           --label "build.version=${APP_VERSION}" \
@@ -53,12 +64,25 @@ steps:
           --label "build.gitref=${CIRCLE_SHA1}"
 
   - when:
+      condition: << parameters.persist_container_image >>
+      steps:
+        - run:
+            name: Persist container image to workspace
+            command: |
+              mkdir -p docker_cache
+              docker save ${IMAGE_NAME}:${APP_VERSION} -o docker_cache/build_image.tar
+        - persist_to_workspace:
+            root: ~/app
+            paths:
+              - docker_cache
+
+  - when:
       condition: << parameters.snyk-scan >>
       steps:
         - snyk/scan:
             project: "${CIRCLE_PROJECT_REPONAME}-docker"
             organization: << parameters.snyk-org >>
-            docker-image-name: "<< parameters.image_name >>:$APP_VERSION"
+            docker-image-name: "${IMAGE_NAME}:${APP_VERSION}"
             target-file: << parameters.dockerfile_dir >>/<< parameters.snyk-target-file >>
             severity-threshold: << parameters.snyk-threshold >>
             fail-on-issues: << parameters.snyk-fail-build >>
