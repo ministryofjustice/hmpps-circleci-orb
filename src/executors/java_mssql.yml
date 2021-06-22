@@ -4,6 +4,7 @@ docker:
   - image: mcr.microsoft.com/mssql/server:<<parameters.mssql_tag>>
     environment:
       - SA_PASSWORD=<<parameters.sa_password>>
+      - ACCEPT_EULA=y
       - DOCKER_HOST=unix:///var/run/docker.sock
       - TMPDIR=/private
 environment:
