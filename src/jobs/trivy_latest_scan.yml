@@ -1,0 +1,65 @@
+---
+description: >
+  Scan the latest tag (docker container image) for CVEs using Trivy.
+
+  This is intended to be a scheduled job that runs maybe daily and can
+  alert teams to new found issues on running applications that might not
+  be in active development.
+executor: default
+parameters:
+  image_name:
+    type: string
+    default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+  cve_severities_to_check:
+    type: string
+    default: HIGH,CRITICAL
+    description: What severity of CVE to look for? Options are UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+  slack_channel:
+    type: string
+    default: dps_alerts_security
+    description: Slack channel to use for notifications.
+steps:
+  - checkout
+  - setup_remote_docker
+  - install_trivy
+  - run:
+      name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
+      command: |
+        /tmp/trivy image \
+          --exit-code 100 \
+          --no-progress \
+          --severity << parameters.cve_severities_to_check >> \
+          --ignore-unfixed \
+          "<< parameters.image_name >>:latest"
+  - slack/notify:
+      event: fail
+      channel: << parameters.slack_channel >>
+      custom: |
+        {
+          "blocks": [
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
+              },
+              "accessory": {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "text": "View job"
+                },
+                "url": "${CIRCLE_BUILD_URL}"
+              }
+            }
+          ]
+        }

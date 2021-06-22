@@ -1,0 +1,33 @@
+---
+description: >
+  Scan the built docker container for CVEs using Trivy.
+executor: default
+parameters:
+  fail_build:
+    type: boolean
+    default: true
+    description: Fail the build if any CVEs are detected.
+  cve_severities_to_check:
+    type: string
+    default: HIGH,CRITICAL
+    description: What severity of CVE to look for? Options are UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+steps:
+  - checkout
+  - setup_remote_docker
+  - recall_container_image
+  - install_trivy
+  - run:
+      name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
+      command: |
+        EXIT_CODE=0
+
+        if [ "<< parameters.fail_build >>" == "true" ]; then
+          EXIT_CODE=100
+        fi
+
+        /tmp/trivy image \
+          --exit-code ${EXIT_CODE} \
+          --no-progress \
+          --severity << parameters.cve_severities_to_check >> \
+          --ignore-unfixed \
+          "${IMAGE_NAME}:${APP_VERSION}"
