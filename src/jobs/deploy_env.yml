@@ -34,6 +34,18 @@ parameters:
   helm_additional_args:
     type: string
     default: ""
+  show_changelog:
+    type: boolean
+    default: false
+    description: When true, displays what is new since the previous deployment.
+  k8s_deployment_name:
+    type: string
+    default: PROJECT_NAME
+    description: The Deployment resource's name in Kubernetes to interrogate for the previous deployment's version
+  fixed_previous_version:
+    type: string
+    default: ""
+    description: Instead of reading from Kubernetes deployment, provide a fixed APP_VERSION for the previous deployment
 steps:
   - checkout
   - k8s_setup
@@ -41,6 +53,20 @@ steps:
   - install_aws_cli
   - mem/recall:
       env_var: APP_VERSION
+  - when:
+      condition: <<parameters.show_changelog>>
+      steps:
+        - run:
+            name: Show changes about to be released on << parameters.env >>
+            environment:
+              K8S_DEPLOYMENT_NAME: << parameters.k8s_deployment_name >>
+              K8S_PREVIOUS_APP_VERSION: << parameters.fixed_previous_version >>
+            command: <<include(scripts/version_history.sh)>>
+        - run:
+            name: Store deployment changelog
+            command: |
+              DEPLOYMENT_CHANGELOG="$(<.deployment_changelog)"
+              echo "export DEPLOYMENT_CHANGELOG_JSON=$(echo -n "$DEPLOYMENT_CHANGELOG" | tr '"' "'" | jq -Rs)" >> $BASH_ENV
   - deploy:
       name: Deploy to << parameters.env >>
       working_directory: << parameters.helm_dir >>
@@ -62,15 +88,6 @@ steps:
               {
                 "blocks": [
                   {
-                    "type": "context",
-                    "elements": [
-                      {
-                        "type": "mrkdwn",
-                        "text": ":circleci-${CCI_STATUS}: CircleCI deploy ${CCI_STATUS}"
-                      }
-                    ]
-                  },
-                  {
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
@@ -84,6 +101,19 @@ steps:
                       },
                       "url": "${CIRCLE_BUILD_URL}"
                     }
+                  },
+                  {
+                    "type": "context",
+                    "elements": [
+                      {
+                        "type": "mrkdwn",
+                        "text": ":circleci-${CCI_STATUS}: Deploy ${CCI_STATUS}"
+                      },
+                      {
+                        "type": "plain_text",
+                        "text": "\n${DEPLOYMENT_CHANGELOG_JSON}"
+                      }
+                    ]
                   }
                 ]
               }

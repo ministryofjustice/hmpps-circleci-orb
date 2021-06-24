@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -e
+
+# ensure consequences still work if this script blows up
+touch .deployment_changelog
 
 if [ "$K8S_DEPLOYMENT_NAME" == "PROJECT_NAME" ]; then
   K8S_DEPLOYMENT_NAME="$CIRCLE_PROJECT_REPONAME"
