@@ -37,7 +37,7 @@ parameters:
   show_changelog:
     type: boolean
     default: false
-    description: When true, displays what is new since the previous deployment.
+    description: When true, displays what is new since the previous deployment in the job, and in Slack, if applicable
   k8s_deployment_name:
     type: string
     default: PROJECT_NAME
@@ -45,7 +45,7 @@ parameters:
   fixed_previous_version:
     type: string
     default: ""
-    description: Instead of reading from Kubernetes deployment, provide a fixed APP_VERSION for the previous deployment
+    description: (Only used for orb integration testing) Instead of reading from Kubernetes deployment, provide a fixed APP_VERSION for the previous deployment
 steps:
   - checkout
   - k8s_setup

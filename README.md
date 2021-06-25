@@ -25,7 +25,7 @@ circleci orb pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:al
 
 This orb is dependant on the `circleci/slack` orb. To allow slack messages to be sent, a slack app has been created as per the instructions here: <https://github.com/CircleCI-Public/slack-orb/wiki/Setup>
 
-To see the slack apps configuration go here <https://api.slack.com/apps/> and find the app called `App Releases`. From here you can find the `OAuth & Permissions` page. The access token for this app needs to be exposed as environment variable `SLACK_ACCESS_TOKEN` to the circleci job - please read the linked docs for more details. Including this environment variable can be done by including the circleci context `hmpps-common-vars` on the circleci workflow.
+To see the slack apps configuration go here <https://api.slack.com/apps/> and find the app called `HMPPS CircleCI`. From here you can find the `OAuth & Permissions` page. The access token for this app needs to be exposed as environment variable `SLACK_ACCESS_TOKEN` to the circleci job - please read the linked docs for more details. Including this environment variable can be done by including the circleci context `hmpps-common-vars` on the circleci workflow.
 
 ## Resources
 
@@ -42,4 +42,3 @@ To publish a new production version:
 * On merge, the release will be published to the orb registry automatically.
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
-

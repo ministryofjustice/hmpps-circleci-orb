@@ -1,0 +1,25 @@
+---
+description: >
+  Deployment with Slack notifications and git changelog
+usage:
+  version: 2.1
+  orbs:
+    hmpps: ministryofjustice/hmpps@3.5
+  workflows:
+    build-test-and-deploy:
+      jobs:
+        - hmpps/build_docker:
+            name: build_docker
+            image_name: example_image_name
+            snyk-scan: true
+            snyk-threshold: high
+        - hmpps/deploy_env:
+            name: deploy_dev
+            env: "dev"
+            slack_notification: true
+            slack_channel_name: your-notification-channel
+            show_changelog: true
+            context:
+              - hmpps-common-vars
+            requires:
+              - build_docker
