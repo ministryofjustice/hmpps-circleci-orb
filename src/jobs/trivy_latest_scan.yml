@@ -23,6 +23,10 @@ steps:
   - setup_remote_docker
   - install_trivy
   - run:
+      name: Ensure we have latest image from the repo
+      command: |
+        docker pull "<< parameters.image_name >>:latest"
+  - run:
       name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
       command: |
         /tmp/trivy image \
