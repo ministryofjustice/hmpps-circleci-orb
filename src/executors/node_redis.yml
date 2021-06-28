@@ -1,0 +1,12 @@
+---
+description: >
+  Executor for node.js jobs with redis image
+docker:
+  - image: 'cimg/node:<<parameters.node_tag>>'
+  - image: 'circleci/redis:<<parameters.redis_tag>>'
+working_directory: ~/app
+parameters:
+  node_tag:
+    type: string
+  redis_tag:
+    type: string
