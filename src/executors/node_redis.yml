@@ -7,8 +7,6 @@ docker:
 working_directory: ~/app
 parameters:
   node_tag:
-    default: "14.16-browsers"
     type: string
   redis_tag:
-    default: "4.0-buster"
     type: string
