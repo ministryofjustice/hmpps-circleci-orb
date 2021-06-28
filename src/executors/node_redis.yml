@@ -1,0 +1,14 @@
+---
+description: >
+  Executor for node.js jobs with redis image
+docker:
+  - image: 'cimg/node:<<parameters.node_tag>>'
+  - image: 'circleci/redis:<<parameters.redis_tag>>'
+working_directory: ~/app
+parameters:
+  node_tag:
+    default: "14.16-browsers"
+    type: string
+  redis_tag:
+    default: "4.0-buster"
+    type: string
