@@ -42,10 +42,6 @@ parameters:
     type: string
     default: PROJECT_NAME
     description: The Deployment resource's name in Kubernetes to interrogate for the previous deployment's version
-  fixed_previous_version:
-    type: string
-    default: ""
-    description: (Only used for orb integration testing) Instead of reading from Kubernetes deployment, provide a fixed APP_VERSION for the previous deployment
 steps:
   - checkout
   - k8s_setup
@@ -60,7 +56,6 @@ steps:
             name: Show changes about to be released on << parameters.env >>
             environment:
               K8S_DEPLOYMENT_NAME: << parameters.k8s_deployment_name >>
-              K8S_PREVIOUS_APP_VERSION: << parameters.fixed_previous_version >>
             command: <<include(scripts/version_history.sh)>>
         - run:
             name: Store deployment changelog

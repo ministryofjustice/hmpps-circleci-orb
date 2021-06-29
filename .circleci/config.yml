@@ -88,8 +88,6 @@ workflows:
           helm_additional_args: "--dry-run --debug"
           slack_notification: true
           slack_channel_name: dps_alerts_non_prod
-          show_changelog: true
-          fixed_previous_version: "2021-06-08.1170.fe7a8db"
           requires:
             - hmpps/build_docker
           context:
