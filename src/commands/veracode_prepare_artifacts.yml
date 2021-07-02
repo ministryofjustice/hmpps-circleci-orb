@@ -20,4 +20,4 @@ steps:
       name: Zip files ready for Veracode scan
       command: |
          cd temp_app
-         zip -r ../source.zip . -x "*node_modules*" -x "*agent.jar*"
+         zip -r ../source.zip . -x "*node_modules*" -x "*agent.jar*" -x "*vendor/bundle*"
