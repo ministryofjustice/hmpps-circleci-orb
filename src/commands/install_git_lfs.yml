@@ -1,0 +1,9 @@
+---
+description: Install Git LFS
+steps:
+  - run:
+      name: Install Git LFS
+      command: |
+        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+        DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends git-lfs
+        git lfs install

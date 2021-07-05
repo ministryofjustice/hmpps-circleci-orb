@@ -30,6 +30,7 @@ jobs:
       - hmpps/k8s_setup
       - hmpps/install_helm
       - hmpps/install_aws_cli
+      - hmpps/install_git_lfs
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.

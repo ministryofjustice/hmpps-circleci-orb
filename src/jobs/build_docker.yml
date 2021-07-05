@@ -35,7 +35,14 @@ parameters:
   snyk-args:
     type: string
     default: ""
+  git-lfs:
+    type: boolean
+    default: false
 steps:
+  - when:
+      condition: << parameters.git-lfs >>
+      steps:
+        - install_git_lfs
   - checkout
   - setup_remote_docker:
       docker_layer_caching: true
