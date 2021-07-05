@@ -33,6 +33,7 @@ steps:
         -action uploadandscan \
         -appname ${CIRCLE_PROJECT_REPONAME} \
         -createprofile true \
+        -deleteincompletescan true \
         -version "CircleCI-${CIRCLE_BUILD_NUM}" \
         -filepath source.zip
   - slack/notify:
