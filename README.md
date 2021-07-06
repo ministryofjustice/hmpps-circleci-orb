@@ -8,7 +8,7 @@ Example use-cases are provided on the orb [registry page](https://circleci.com/o
 
 ## Known Issue
 
-You may get this error when pushing a new PR, 
+You may get this error when pushing a new PR
 
 ```
 The dev version of ministryofjustice/hmpps@dev:alpha has expired. Dev versions of orbs are only valid for 90 days after publishing.
@@ -20,6 +20,8 @@ If you see this error, you need to publish a dev:alpha version manually. The fix
 circleci orb pack ./src | circleci orb validate -
 circleci orb pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:alpha
 ```
+
+You may also get an error if the `dev:alpha` version is out of date and there are config changes in the latest orb that aren't in the dev alpha version.
 
 ## Slack notifications
 
