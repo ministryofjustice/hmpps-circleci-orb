@@ -1,10 +1,14 @@
 ---
 description: >
   Veracode SAST policy scan
-executor:
-  docker:
-    - image: veracode/api-wrapper-java:latest
+docker:
+  - image: cimg/base:2021.04
+  - image: veracode/api-wrapper-java:latest
 parameters:
+  docker_image_app_dir:
+    description: Directory inside the docker image where the application artifacts are saved
+    type: string
+    default: "/app"
   slack_channel:
     type: string
     default: dps_alerts_security
@@ -16,13 +20,18 @@ parameters:
     type: string
 steps:
   - run:
+      name: "Install docker cli"
+      command: sudo apt install docker-cli
+  - veracode_prepare_artifacts:
+      docker_image_app_dir: << parameters.docker_image_app_dir >>
+  - run:
       name: "Upload to Veracode"
       command: |
         java -jar /opt/veracode/api-wrapper.jar
         -vid "${VERACODE_API_ID}" \
         -vkey "${VERACODE_API_KEY}" \
         -teams "<< parameters.teams >>" \
-        -action uploadandscan \
+        -action UploadAndScan \
         -appname ${CIRCLE_PROJECT_REPONAME} \
         -createprofile true \
         -deleteincompletescan true \
