@@ -8,8 +8,7 @@ Example use-cases are provided on the orb [registry page](https://circleci.com/o
 
 ## Known Issue
 
-You may get this error when pushing a new PR
-
+You may get this error when pushing a new PR:
 ```
 The dev version of ministryofjustice/hmpps@dev:alpha has expired. Dev versions of orbs are only valid for 90 days after publishing.
 ```
