@@ -1,14 +1,8 @@
 ---
 description: >
   Veracode SAST policy scan
-docker:
-  - image: cimg/base:2021.04
-  - image: veracode/api-wrapper-java:latest
+executor: node
 parameters:
-  docker_image_app_dir:
-    description: Directory inside the docker image where the application artifacts are saved
-    type: string
-    default: "/app"
   slack_channel:
     type: string
     default: dps_alerts_security
@@ -18,16 +12,21 @@ parameters:
     description: |
                     Comma-separated list of team names associated with the specified application. Validates against the names of existing teams for this account.
     type: string
+  docker_image_app_dir:
+    description: Directory inside the docker image where the application artifacts are saved
+    type: string
+    default: "/app"
 steps:
-  - run:
-      name: "Install docker cli"
-      command: sudo apt install docker-cli
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
   - run:
+      name: "Download/Extract veracode agent"
+      command: |
+        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/21.6.8.0/vosp-api-wrappers-java-21.6.8.0.jar -O VeracodeJavaAPI.jar
+  - run:
       name: "Upload to Veracode"
       command: |
-        java -jar /opt/veracode/api-wrapper.jar
+        java -jar VeracodeJavaAPI.jar \
         -vid "${VERACODE_API_ID}" \
         -vkey "${VERACODE_API_KEY}" \
         -teams "<< parameters.teams >>" \
