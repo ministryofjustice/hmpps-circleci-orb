@@ -1,0 +1,112 @@
+---
+description: >
+  Trigger and (optionally) follow a pipeline in another CircleCI project.
+executor: default
+parameters:
+  branch:
+    default: main
+    description: Name of the branch to target
+    type: string
+  build_parameters:
+    default: '{}'
+    description: Parameters to pass to the triggered pipeline (in a JSON string)
+    type: string
+  organization:
+    default: ministryofjustice
+    description: Name of the CircleCI organization
+    type: string
+  repository:
+    description: Name of the repository
+    type: string
+  token:
+    description: CircleCI Auth token for API access, either the string value, or an environment variable (i.e. $AUTH_TOKEN) that can be read via a context.
+    type: string
+  vcs_type:
+    default: github
+    description: Chosen VCS (either github or bitbucket)
+    type: string
+  follow_pipeline:
+    default: true
+    description: Follow the triggered pipeline and capture the result
+    type: boolean
+  follow_timeout:
+    default: 500
+    description: Number of seconds to wait for the triggered pipeline to complete
+    type: integer
+  fail_build:
+    default: true
+    description: Fail the build if the triggered pipeline fails
+    type: boolean
+steps:
+  - run:
+      name: Trigger pipeline on '<< parameters.vcs_type >>/<< parameters.organization >>/<< parameters.repository >>' using branch '<< parameters.branch >>'
+      command: |
+        echo "Triggering the pipeline..."
+        BUILD_RESPONSE=$(
+          curl \
+            --silent \
+            --header "Circle-Token: << parameters.token >>" \
+            --request POST \
+            --retry 5 \
+            --connect-timeout 10 \
+            --max-time 60 \
+            --header 'Content-Type: application/json' \
+            --data '{"branch":"<< parameters.branch >>", "parameters":<< parameters.build_parameters >>}' \
+            --url https://circleci.com/api/v2/project/<< parameters.vcs_type >>/<< parameters.organization >>/<< parameters.repository >>/pipeline
+        )
+
+        echo "Trigger response:"
+        echo $BUILD_RESPONSE
+
+        BUILD_ID=$(echo $BUILD_RESPONSE | jq -r '.id')
+
+        if [[ $BUILD_ID == null ]]; then
+          echo "Unable to trigger pipeline"
+          exit 1
+        fi
+
+        echo "export BUILD_ID=$BUILD_ID" >> $BASH_ENV
+
+  - when:
+      condition: << parameters.follow_pipeline >>
+      steps:
+        - run:
+            name: Following pipeline on '<< parameters.vcs_type >>/<< parameters.organization >>/<< parameters.repository >>'
+            command: |
+              WAIT=500
+              TIMEOUT=$(expr $SECONDS + $WAIT)
+              STOPPED_TIME=null
+              BUILD_URL=https://circleci.com/api/v2/pipeline/$BUILD_ID/workflow
+
+              echo "Waiting up to $WAIT seconds for the pipeline to complete..."
+              echo "  - API Endpoint: $BUILD_URL"
+              sleep 10
+
+              while [ $STOPPED_TIME == "null" ] && [ $SECONDS -le $TIMEOUT ]; do
+                STATUS_RESPONSE=$(
+                  curl \
+                    --silent \
+                    --header "Circle-Token: << parameters.token >>" \
+                    --request GET \
+                    --retry 5 \
+                    --connect-timeout 10 \
+                    --max-time 60 \
+                    --url $BUILD_URL
+                )
+
+                STOPPED_TIME=$(echo $STATUS_RESPONSE | jq -r '.items[0].stopped_at')
+                STATUS=$(echo $STATUS_RESPONSE | jq -r '.items[0].status')
+
+                if [ $STOPPED_TIME == "null" ]; then
+                  echo "  ... status: $STATUS"
+                  sleep 15
+                fi
+              done
+
+              echo "Pipeline complete - status: $STATUS"
+
+              if [ "<< parameters.fail_build >>" == "true" ]; then
+                if [ $STATUS != "success" ]; then
+                  exit 1
+                fi
+              fi
