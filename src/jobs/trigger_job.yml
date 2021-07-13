@@ -1,7 +1,7 @@
 ---
 description: >
   Trigger and (optionally) follow a pipeline in another CircleCI project.
-executor: default
+executor: default_small
 parameters:
   branch:
     default: main
