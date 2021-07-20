@@ -9,6 +9,9 @@ parameters:
   dockerfile_dir:
     type: string
     default: "."
+  docker_version:
+    type: string
+    default: "20.10.6"
   publish:
     type: boolean
     default: true
@@ -46,6 +49,7 @@ steps:
   - checkout
   - setup_remote_docker:
       docker_layer_caching: true
+      version: << parameters.docker_version >>
   - create_app_version
   - run:
       name: Create IMAGE_NAME env var

@@ -9,9 +9,13 @@ parameters:
   publish_latest_tag:
     type: boolean
     default: true
+  docker_version:
+    type: string
+    default: "20.10.6"
 steps:
   - checkout
-  - setup_remote_docker
+  - setup_remote_docker:
+      version: << parameters.docker_version >>
   - recall_container_image
   - run:
       name: Publish image to repository
