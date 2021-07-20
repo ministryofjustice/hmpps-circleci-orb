@@ -11,9 +11,13 @@ parameters:
     type: string
     default: HIGH,CRITICAL
     description: What severity of CVE to look for? Options are UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+  docker_version:
+    type: string
+    default: "20.10.6"
 steps:
   - checkout
-  - setup_remote_docker
+  - setup_remote_docker:
+      version: << parameters.docker_version >>
   - recall_container_image
   - install_trivy
   - run:

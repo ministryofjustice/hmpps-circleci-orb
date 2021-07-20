@@ -10,6 +10,9 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+  docker_version:
+    type: string
+    default: "20.10.6"
   cve_severities_to_check:
     type: string
     default: HIGH,CRITICAL
@@ -20,7 +23,8 @@ parameters:
     description: Slack channel to use for notifications.
 steps:
   - checkout
-  - setup_remote_docker
+  - setup_remote_docker:
+      version: << parameters.docker_version >>
   - install_trivy
   - run:
       name: Ensure we have latest image from the repo
