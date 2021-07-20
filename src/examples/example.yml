@@ -8,7 +8,9 @@ usage:
   workflows:
     build-test-and-deploy:
       jobs:
-        - hmpps/npm_security_audit
+        - hmpps/npm_security_audit:
+            slack_channel: your_channel_or_leave_out_for_default
+            context: [hmpps-common-vars]
         - hmpps/helm_lint
         - hmpps/build_docker:
             name: build_docker
