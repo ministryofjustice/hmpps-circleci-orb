@@ -1,0 +1,13 @@
+---
+description: "Wait for a specified port to be ready i.e. has started listening for requests.  Defaults to 4566 - localstack default port. Requires curl to be installed in the image."
+parameters:
+  port:
+    type: integer
+    default: 4566
+  host:
+    type: string
+    default: "localhost"
+steps:
+  - run:
+      name: Wait for port to be ready
+      command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://<<parameters.host>>:<<parameters.port>>
