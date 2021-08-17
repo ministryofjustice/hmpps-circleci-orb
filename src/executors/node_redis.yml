@@ -5,8 +5,14 @@ docker:
   - image: 'cimg/node:<<parameters.node_tag>>'
   - image: 'circleci/redis:<<parameters.redis_tag>>'
 working_directory: ~/app
+resource_class: <<parameters.resource_class>>
 parameters:
+  resource_class:
+    default: medium
+    type: string
   node_tag:
+    default: "14.16-browsers"
     type: string
   redis_tag:
+    default: "buster"
     type: string

@@ -4,7 +4,11 @@ description: >
 docker:
   - image: 'cimg/node:<<parameters.tag>>'
 working_directory: ~/app
+resource_class: <<parameters.resource_class>>
 parameters:
+  resource_class:
+    default: medium
+    type: string
   tag:
     default: "14.16-browsers"
     type: string
