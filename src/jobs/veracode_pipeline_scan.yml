@@ -19,6 +19,9 @@ steps:
       command: |
         wget https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip -O pipeline-scan.zip
         unzip pipeline-scan.zip -x README.md
+  - restore_cache:
+      keys:
+        - veracode-baseline-results-{{ .Branch }}
   - run:
       name: Download Veracode Policy
       no_output_timeout: 1m
@@ -32,22 +35,23 @@ steps:
       no_output_timeout: 30m
       command: |
         java -jar pipeline-scan.jar \
-        --file source.zip \
-        --policy_file Ministry_of_Justice.json \
-        --veracode_api_id "${VERACODE_API_ID}" \
-        --veracode_api_key "${VERACODE_API_KEY}" \
-        --timeout 60 \
-        --issue_details false \
-        --summary_output true
-  #  Save results to circles artifact storage
-  #  - run:
-  #      name: Save results
-  #      when: always
-  #      command: |
-  #        mkdir veracode
-  #        mv results.json results.txt veracode
-  #  - store_artifacts:
-  #      path: veracode
+          $(test -f results.json && echo "--baseline_file results.json") \
+          --json_output true \
+          --file source.zip \
+          --policy_file Ministry_of_Justice.json \
+          --veracode_api_id "${VERACODE_API_ID}" \
+          --veracode_api_key "${VERACODE_API_KEY}" \
+          --timeout 60 \
+          --issue_details false \
+          --summary_output true
+        # Make the results.txt slack/json friendly and store in an env var.
+        RESULTS_TXT=$(cat results.txt | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g;' | jq -Rs .)
+        echo "export RESULTS_TXT=${RESULTS_TXT}" >> $BASH_ENV
+  - save_cache:
+      key: veracode-baseline-results-{{ .Branch }}
+      when: always
+      paths:
+        - "results.json"
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
@@ -77,6 +81,15 @@ steps:
                 },
                 "url": "${CIRCLE_BUILD_URL}"
               }
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": "```${RESULTS_TXT}```"
+                }
+              ]
             }
           ]
         }
