@@ -91,6 +91,7 @@ workflows:
           slack_channel_name: dps_alerts_non_prod
           requires:
             - hmpps/build_docker
+            - integration-tests-orb-commands # regression: APP_VERSION persisted in both build_docker and integration-tests-orb-commands causes failure in recall
           context:
             - moj-slack-notifications
 
