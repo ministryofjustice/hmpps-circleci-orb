@@ -9,7 +9,7 @@ display:
   source_url: "https://github.com/ministryofjustice/hmpps-circleci-orb"
 
 orbs:
-  mem: circleci/rememborb@0.0.1
+  mem: circleci/rememborb@0.0.2
   aws-cli: circleci/aws-cli@1.2.1
   kubernetes: circleci/kubernetes@0.11.0
   helm: circleci/helm@1.1.2
