@@ -26,6 +26,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
+      - checkout
       - hmpps/create_app_version
       - hmpps/k8s_setup
       - hmpps/install_helm

@@ -1,0 +1,22 @@
+---
+description: >
+  Creates an application version string, formatted
+  `[CURRENT_DATE].[CircleCI pipeline number].[SHORT_SHA1]`
+  e.g. `2021-08-26.5715.5068cb6a`
+
+  The pipeline number does not change between jobs in the same pipeline,
+  not even if the workflow is re-triggered.
+
+  This means even separate workflows will be able to share the same `APP_VERSION`
+  as long as they're in the same pipeline (`.circleci/config.yml` file) per run
+
+  Note: `scripts/version_history.sh` depends on the 3rd segment to be a git SHA
+steps:
+  - run:
+      name: Generate app version string from commit
+      command: |
+        DATE=$(date '+%Y-%m-%d')
+        SHORT_SHA1="$(git show "$CIRCLE_SHA1" --format='%h' --quiet)"
+        APP_VERSION="$DATE.<< pipeline.number >>.$SHORT_SHA1"
+        echo "Created version string: ${APP_VERSION}"
+        echo "export APP_VERSION=$APP_VERSION" >> $BASH_ENV

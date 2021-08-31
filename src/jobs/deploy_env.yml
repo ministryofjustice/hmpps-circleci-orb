@@ -47,8 +47,7 @@ steps:
   - k8s_setup
   - install_helm
   - install_aws_cli
-  - mem/recall:
-      env_var: APP_VERSION
+  - get_app_version
   - when:
       condition: <<parameters.show_changelog>>
       steps:
