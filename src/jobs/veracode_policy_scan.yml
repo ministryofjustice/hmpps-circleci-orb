@@ -10,7 +10,7 @@ parameters:
   teams:
     default: "hmpps-tech"
     description: |
-      Comma-separated list of team names associated with the specified application. 
+      Comma-separated list of team names associated with the specified application.
       Validates against the names of existing teams for this account.
     type: string
   docker_image_app_dir:
