@@ -1,0 +1,31 @@
+---
+description: >
+  Takes a text file containing output/results and turn into
+  an environment variable which is suitable for interpolating
+  into a slack custom message template.
+  All slack special chars converted to html entities.
+  Non json friendly chars are escaped.
+parameters:
+  file:
+    type: string
+    default: "results.txt"
+  env_var:
+    type: string
+    default: "SLACK_TXT"
+steps:
+  - run:
+      name: Slack - Process Results Text
+      when: always
+      command: |
+        if [[ -f << parameters.file >> ]]; then
+          echo "Processing file: << parameters.file >>"
+          echo "Exporting to env var: << parameters.env_var >>"
+          SLACK_TXT=$(cat << parameters.file >> | \
+            sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g;' | \
+            jq -Rs . | \
+            sed -E 's/("$)|(^")//g')
+          echo "export << parameters.env_var >>='${SLACK_TXT}'" >> $BASH_ENV
+        else
+          echo "File not found: << parameters.file >>"
+          exit 1
+        fi

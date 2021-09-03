@@ -10,7 +10,8 @@ parameters:
   teams:
     default: "hmpps-tech"
     description: |
-                    Comma-separated list of team names associated with the specified application. Validates against the names of existing teams for this account.
+      Comma-separated list of team names associated with the specified application. 
+      Validates against the names of existing teams for this account.
     type: string
   docker_image_app_dir:
     description: Directory inside the docker image where the application artifacts are saved
@@ -35,36 +36,11 @@ steps:
         -createprofile true \
         -deleteincompletescan true \
         -version "CircleCI-${CIRCLE_BUILD_NUM}" \
-        -filepath source.zip
+        -filepath source.zip \
+        2>&1 | tee output.txt
+  - slack_message_results:
+      file: output.txt
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
-      custom: |
-        {
-          "blocks": [
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
-              },
-              "accessory": {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "View job"
-                },
-                "url": "${CIRCLE_BUILD_URL}"
-              }
-            }
-          ]
-        }
+      custom: <<include(files/slack_failed_with_results.tpl.json)>>
