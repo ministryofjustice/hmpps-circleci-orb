@@ -13,6 +13,9 @@ parameters:
   docker_version:
     type: string
     default: "20.10.6"
+  trivy_template:
+    type: string
+    default: <<include(files/trivy.tpl)>>
   cve_severities_to_check:
     type: string
     default: HIGH,CRITICAL
@@ -39,35 +42,22 @@ steps:
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           "<< parameters.image_name >>:latest"
+  - run:
+      when: on_fail
+      name: Get Trivy results formatted for slack
+      command: |
+        /tmp/trivy image \
+          --exit-code 100 \
+          --no-progress \
+          --severity << parameters.cve_severities_to_check >> \
+          --ignore-unfixed \
+          --output results.txt \
+          --format template \
+          --template '<< parameters.trivy_template >>' \
+          "<< parameters.image_name >>:latest"
+  - slack_message_results:
+      file: results.txt
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
-      custom: |
-        {
-          "blocks": [
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
-              },
-              "accessory": {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "View job"
-                },
-                "url": "${CIRCLE_BUILD_URL}"
-              }
-            }
-          ]
-        }
+      custom: <<include(files/slack_failed_with_results.tpl.json)>>

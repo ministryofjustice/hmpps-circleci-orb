@@ -44,9 +44,8 @@ steps:
           --timeout 60 \
           --issue_details false \
           --summary_output true
-        # Make the results.txt slack/json friendly and store in an env var.
-        RESULTS_TXT=$(cat results.txt | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g;' | jq -Rs .)
-        echo "export RESULTS_TXT=${RESULTS_TXT}" >> $BASH_ENV
+  - slack_message_results:
+      file: results.txt
   - save_cache:
       key: veracode-baseline-results-{{ .Branch }}
       when: always
@@ -55,41 +54,4 @@ steps:
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
-      custom: |
-        {
-          "blocks": [
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
-              },
-              "accessory": {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "View job"
-                },
-                "url": "${CIRCLE_BUILD_URL}"
-              }
-            },
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": "```${RESULTS_TXT}```"
-                }
-              ]
-            }
-          ]
-        }
+      custom: <<include(files/slack_failed_with_results.tpl.json)>>
