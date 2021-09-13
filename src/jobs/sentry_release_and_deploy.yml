@@ -10,17 +10,31 @@ parameters:
     type: string
   sentry_environment:
     type: string
+  sentry_create_release:
+    type: boolean
+    default: false
+    description: "Tell sentry-cli to work out the commits on this release - this should only be done ONCE, ideally when you push to DEV."
 steps:
   - checkout
   - mem/recall:
       env_var: APP_VERSION
   - run:
-      name: Sentry - Create a release and notify of deployment
+      name: Sentry - Setup environment
       command: |
         export SENTRY_ORG=<< parameters.sentry_org >>
         export SENTRY_PROJECT=<< parameters.sentry_project >>
         curl -sL https://sentry.io/get-cli/ | bash
-        sentry-cli releases new $APP_VERSION --project $SENTRY_PROJECT
-        sentry-cli releases set-commits $APP_VERSION --auto
-        sentry-cli releases finalize $APP_VERSION
+
+  - when:
+      condition: << parameters.sentry_create_release >>
+      steps:
+        - run:
+            name: Sentry - Create release
+            command: |
+              sentry-cli releases new $APP_VERSION --project $SENTRY_PROJECT
+              sentry-cli releases set-commits $APP_VERSION --auto
+              sentry-cli releases finalize $APP_VERSION
+  - run:
+      name: Sentry - Record deployment
+      command: |
         sentry-cli releases deploys $APP_VERSION new -e << parameters.sentry_environment >>
