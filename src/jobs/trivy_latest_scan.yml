@@ -45,6 +45,7 @@ steps:
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
+          --skip-dirs /usr/local/lib/node_modules/npm \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - run:
       when: on_fail
