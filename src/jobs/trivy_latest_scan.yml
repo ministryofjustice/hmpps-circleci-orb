@@ -20,6 +20,10 @@ parameters:
     type: string
     default: HIGH,CRITICAL
     description: What severity of CVE to look for? Options are UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+  additional_args:
+    type: string
+    default: ""
+    description: Additional CLI args to pass into the trivy command
   slack_channel:
     type: string
     default: dps_alerts_security
@@ -41,7 +45,7 @@ steps:
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
-          "<< parameters.image_name >>:latest"
+          << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - run:
       when: on_fail
       name: Get Trivy results formatted for slack

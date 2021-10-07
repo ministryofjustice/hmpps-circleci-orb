@@ -11,6 +11,10 @@ parameters:
     type: string
     default: HIGH,CRITICAL
     description: What severity of CVE to look for? Options are UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL.
+  additional_args:
+    type: string
+    default: ""
+    description: Additional CLI args to pass into the trivy command
   docker_version:
     type: string
     default: "20.10.6"
@@ -34,4 +38,4 @@ steps:
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
-          "${IMAGE_NAME}:${APP_VERSION}"
+          << parameters.additional_args >> "${IMAGE_NAME}:${APP_VERSION}"
