@@ -15,6 +15,10 @@ parameters:
     type: string
     default: ""
     description: Additional CLI args to pass into the trivy command
+  cache_key:
+    type: string
+    default: v1
+    description: Cache key for the vulnerability database - change to break the cache.
   docker_version:
     type: string
     default: "20.10.6"
@@ -24,6 +28,8 @@ steps:
       version: << parameters.docker_version >>
   - recall_container_image
   - install_trivy
+  - restore_cache:
+      key: trivy_cache_<< parameters.cache_key >>
   - run:
       name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
       command: |
@@ -34,9 +40,15 @@ steps:
         fi
 
         /tmp/trivy image \
+          --cache-dir .trivy \
+          image \
           --exit-code ${EXIT_CODE} \
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
           << parameters.additional_args >> "${IMAGE_NAME}:${APP_VERSION}"
+  - save_cache:
+      key: trivy_cache_<< parameters.cache_key >>
+      paths:
+        - .trivy

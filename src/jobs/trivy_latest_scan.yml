@@ -24,6 +24,10 @@ parameters:
     type: string
     default: ""
     description: Additional CLI args to pass into the trivy command
+  cache_key:
+    type: string
+    default: v1
+    description: Cache key for the vulnerability database - change to break the cache.
   slack_channel:
     type: string
     default: dps_alerts_security
@@ -33,6 +37,8 @@ steps:
   - setup_remote_docker:
       version: << parameters.docker_version >>
   - install_trivy
+  - restore_cache:
+      key: trivy_cache_<< parameters.cache_key >>
   - run:
       name: Ensure we have latest image from the repo
       command: |
@@ -41,25 +47,34 @@ steps:
       name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
       command: |
         /tmp/trivy image \
+          --cache-dir .trivy \
+          image \
           --exit-code 100 \
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
+  - save_cache:
+      key: trivy_cache_<< parameters.cache_key >>
+      paths:
+        - .trivy
   - run:
       when: on_fail
       name: Get Trivy results formatted for slack
       command: |
         /tmp/trivy image \
+          --cache-dir .trivy \
+          image \
           --exit-code 100 \
           --no-progress \
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
+          --skip-dirs /usr/local/lib/node_modules/npm \
           --output results.txt \
           --format template \
           --template '<< parameters.trivy_template >>' \
-          "<< parameters.image_name >>:latest"
+          << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - slack_message_results:
       file: results.txt
   - slack/notify:
