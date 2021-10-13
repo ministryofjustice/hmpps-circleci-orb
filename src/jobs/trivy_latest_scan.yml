@@ -63,7 +63,7 @@ steps:
       when: on_fail
       name: Get Trivy results formatted for slack
       command: |
-        /tmp/trivy image \
+        /tmp/trivy \
           --cache-dir .trivy \
           image \
           --exit-code 100 \
