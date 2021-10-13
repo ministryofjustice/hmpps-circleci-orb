@@ -39,7 +39,7 @@ steps:
           EXIT_CODE=100
         fi
 
-        /tmp/trivy image \
+        /tmp/trivy \
           --cache-dir .trivy \
           image \
           --exit-code ${EXIT_CODE} \
