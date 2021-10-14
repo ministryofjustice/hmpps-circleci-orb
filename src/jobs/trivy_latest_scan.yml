@@ -46,7 +46,7 @@ steps:
   - run:
       name: Trivy scan for << parameters.cve_severities_to_check >> CVEs
       command: |
-        /tmp/trivy image \
+        /tmp/trivy \
           --cache-dir .trivy \
           image \
           --exit-code 100 \
