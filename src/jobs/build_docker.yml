@@ -9,6 +9,9 @@ parameters:
   dockerfile_dir:
     type: string
     default: "."
+  additional_docker_build_args:
+    type: string
+    default: ""
   docker_version:
     type: string
     default: "20.10.6"
@@ -72,7 +75,8 @@ steps:
           --label "build.version=${APP_VERSION}" \
           --label "build.number=${CIRCLE_BUILD_NUM}" \
           --label "build.url=${CIRCLE_BUILD_URL}" \
-          --label "build.gitref=${CIRCLE_SHA1}"
+          --label "build.gitref=${CIRCLE_SHA1}" \
+          << parameters.additional_docker_build_args >>
 
   - when:
       condition: << parameters.persist_container_image >>
