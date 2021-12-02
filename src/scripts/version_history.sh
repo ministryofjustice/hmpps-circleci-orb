@@ -24,7 +24,7 @@ fi
 # Check $previous_commit sha1 is valid
 if git rev-parse --quiet --verify "${previous_commit}" &>/dev/null; then
   PAGER="cat" git log --oneline --no-decorate \
-    --committer='noreply@github.com' --grep='#' \
+    --pretty=format:'%h %s (%cr)' --committer='noreply@github.com' --grep='#' \
     "${previous_commit}..${current_commit}" \
     | sed 's/Merge pull request /PR /g; s|from ministryofjustice/dependabot/|:dependabot:|g; s|from ministryofjustice/||g' \
     >> .deployment_changelog
