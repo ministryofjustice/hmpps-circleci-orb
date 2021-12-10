@@ -23,7 +23,7 @@ steps:
   - run:
       name: "Download/Extract veracode agent"
       command: |
-        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/21.6.8.0/vosp-api-wrappers-java-21.6.8.0.jar -O VeracodeJavaAPI.jar
+        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/21.12.9.1/vosp-api-wrappers-java-21.12.9.1.jar -O VeracodeJavaAPI.jar
   - run:
       name: "Upload to Veracode"
       command: |
