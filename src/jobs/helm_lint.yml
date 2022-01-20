@@ -8,19 +8,38 @@ parameters:
     default: dev
   chart_name:
     type: string
-    default: ${CIRCLE_PROJECT_REPONAME}
+    default: PROJECT_NAME
   helm_dir:
     type: string
     default: helm_deploy
   helm_additional_args:
     type: string
     default: ""
+  use_git_crypt:
+    type: boolean
+    default: false
+    description: Use git-crypt to decode encrypted secrets within this repository
+  git_crypt_key:
+    description: Decryption key used by git-crypt (base64 encoded), either the string value, or an environment variable (i.e. $GIT_CRYPT_KEY) that can be read via a context.
+    default: $GIT_CRYPT_KEY
+    type: string
 steps:
   - checkout
+  - when:
+      condition: << parameters.use_git_crypt >>
+      steps:
+        - install_git_crypt
+        - run:
+            name: Decrypt secrets
+            command: |
+              echo "<< parameters.git_crypt_key >>" | base64 -d > git-crypt.key
+              git-crypt unlock git-crypt.key
   - install_helm
   - run:
       name: Run helm lint
-      command: |
-        helm dependency update << parameters.chart_name >>
-        helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml << parameters.helm_additional_args >>
       working_directory: << parameters.helm_dir >>
+      environment:
+        CHART_NAME: << parameters.chart_name >>
+        ENV_NAME: << parameters.env >>
+        HELM_ADDITIONAL_ARGS: << parameters.helm_additional_args >>
+      command: <<include(scripts/helm_lint.sh)>>
