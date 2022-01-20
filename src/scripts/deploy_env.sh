@@ -21,16 +21,12 @@ fi
 # Install/update any chart dependencies.
 helm dependency update "${CHART_NAME}"
 
-HELM_ARGS=(--wait
-  --install
-  --reset-values
-  --timeout 5m
-  --history-max 10
+HELM_ARGS=(--wait \
+  --install \
+  --reset-values \
+  --timeout 5m \
+  --history-max 10 \
   --values "values-${ENV_NAME}.yaml")
-
-if [[ -f "secrets-${ENV_NAME}.yaml" ]]; then
-  HELM_ARGS+=("--values" "secrets-${ENV_NAME}.yaml")
-fi
 
 # Set the image tag for this deployment
 if helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
@@ -39,7 +35,7 @@ else
   HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
 fi
 
-read -r -a extra_args <<<"${HELM_ADDITIONAL_ARGS}"
+read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
 
 HELM_ARGS+=("${extra_args[@]}")
 

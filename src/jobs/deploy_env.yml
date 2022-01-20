@@ -42,25 +42,8 @@ parameters:
     type: string
     default: PROJECT_NAME
     description: The Deployment resource's name in Kubernetes to interrogate for the previous deployment's version
-  use_git_crypt:
-    type: boolean
-    default: false
-    description: Use git-crypt to decode encrypted secrets within this repository
-  git_crypt_key:
-    description: Decryption key used by git-crypt (base64 encoded), either the string value, or an environment variable (i.e. $GIT_CRYPT_KEY) that can be read via a context.
-    default: $GIT_CRYPT_KEY
-    type: string
 steps:
   - checkout
-  - when:
-      condition: << parameters.use_git_crypt >>
-      steps:
-        - install_git_crypt
-        - run:
-            name: Decrypt secrets
-            command: |
-              echo "<< parameters.git_crypt_key >>" | base64 -d > git-crypt.key
-              git-crypt unlock git-crypt.key
   - k8s_setup
   - install_helm
   - install_aws_cli
