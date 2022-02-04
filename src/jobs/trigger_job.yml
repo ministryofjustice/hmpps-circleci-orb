@@ -73,7 +73,7 @@ steps:
         - run:
             name: Following pipeline on '<< parameters.vcs_type >>/<< parameters.organization >>/<< parameters.repository >>'
             command: |
-              WAIT=500
+              WAIT=<< parameters.follow_timeout >>
               TIMEOUT=$(expr $SECONDS + $WAIT)
               STOPPED_TIME=null
               BUILD_URL=https://circleci.com/api/v2/pipeline/$BUILD_ID/workflow
