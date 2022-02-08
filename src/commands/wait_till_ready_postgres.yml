@@ -1,0 +1,19 @@
+---
+description: "Wait for postgres to be ready. Defaults to port 5432 on localhost."
+parameters:
+  port:
+    type: integer
+    default: 5432
+  host:
+    type: string
+    default: "localhost"
+steps:
+  - run:
+      name: Wait for port to be ready
+      command: |
+        COMMAND="pg_isready -h <<parameters.host>> -p <<parameters.port>>"
+        for i in {1..10}; do
+          $COMMAND && break
+          sleep 5
+        done
+        $COMMAND
