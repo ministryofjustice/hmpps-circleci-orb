@@ -1,0 +1,31 @@
+---
+docker:
+  - image: cimg/openjdk:<<parameters.jdk_tag>>
+  - image: postgres:<< parameters.postgres_tag >>
+    environment:
+      - POSTGRES_PASSWORD=<< parameters.postgres_password >>
+      - POSTGRES_USER=<< parameters.postgres_username >>
+      - POSTGRES_DB=<< parameters.postgres_db >>
+environment:
+  _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
+working_directory: ~/app
+resource_class: <<parameters.resource_class>>
+parameters:
+  resource_class:
+    default: medium
+    type: string
+  jdk_tag:
+    default: "17.0"
+    type: string
+  postgres_tag:
+    default: "14"
+    type: string
+  postgres_password:
+    default: "dev"
+    type: string
+  postgres_username:
+    default: "root"
+    type: string
+  postgres_db:
+    default: "postgres"
+    type: string
