@@ -9,7 +9,7 @@ parameters:
     default: "localhost"
 steps:
   - run:
-      name: Wait for port to be ready
+      name: Wait for postgres to be ready
       command: |
         COMMAND="pg_isready -h <<parameters.host>> -p <<parameters.port>>"
         for i in {1..10}; do
