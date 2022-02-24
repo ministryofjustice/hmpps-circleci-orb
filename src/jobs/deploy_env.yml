@@ -42,6 +42,20 @@ parameters:
     type: string
     default: PROJECT_NAME
     description: The Deployment resource's name in Kubernetes to interrogate for the previous deployment's version
+  jira_update:
+    type: boolean
+    default: false
+    description: When true, updates any referenced Jira tickets with deployment information. Note that Jira integration must be enabled in your CircleCI project settings.
+  jira_env_type:
+    type: enum
+    default: development
+    description: Environment type to use when updating Jira
+    enum:
+      - production
+      - staging
+      - testing
+      - development
+      - unmapped
 steps:
   - checkout
   - k8s_setup
@@ -112,3 +126,11 @@ steps:
                   }
                 ]
               }
+
+  - when:
+      condition: << parameters.jira_update >>
+      steps:
+        - jira/notify:
+            job_type: deployment
+            environment: << parameters.env >>
+            environment_type: << parameters.jira_env_type >>

@@ -44,6 +44,10 @@ parameters:
   git-lfs:
     type: boolean
     default: false
+  jira_update:
+    type: boolean
+    default: false
+    description: When true, updates any referenced Jira tickets with build status. Note that Jira integration must be enabled in your CircleCI project settings.
 steps:
   - when:
       condition: << parameters.git-lfs >>
@@ -115,3 +119,8 @@ steps:
               docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
+
+  - when:
+      condition: << parameters.jira_update >>
+      steps:
+        - jira/notify
