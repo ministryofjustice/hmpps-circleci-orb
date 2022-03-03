@@ -18,7 +18,7 @@ parameters:
   cache_key:
     description: Specify a custom cache key.
     type: string
-    default: "v1"
+    default: "v2"
   no_output_timeout:
     description: Specify period of time has passed with no output.
     type: string
