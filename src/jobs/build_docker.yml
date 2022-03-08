@@ -24,7 +24,7 @@ parameters:
     description: Make the built container image available for subsequent jobs
   no_output_timeout:
     type: string
-    default: 10m
+    default: 30m
     description: Configure the no_output_timeout setting for the container build step
   snyk-scan:
     type: boolean
