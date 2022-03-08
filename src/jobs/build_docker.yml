@@ -22,6 +22,10 @@ parameters:
     type: boolean
     default: false
     description: Make the built container image available for subsequent jobs
+  no_output_timeout:
+    type: string
+    default: 10m
+    description: Configure the no_output_timeout setting for the container build step
   snyk-scan:
     type: boolean
     default: false
@@ -68,6 +72,7 @@ steps:
       value: "${IMAGE_NAME}"
   - run:
       name: Build container image
+      no_output_timeout: << parameters.no_output_timeout >>
       command: |
         docker build --pull \
           --rm=false << parameters.dockerfile_dir >> \
