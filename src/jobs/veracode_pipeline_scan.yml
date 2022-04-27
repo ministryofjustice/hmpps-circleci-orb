@@ -38,7 +38,7 @@ steps:
           $(test -f results.json && echo "--baseline_file results.json") \
           --json_output true \
           --file source.zip \
-          --policy_file "Ministry of Justice.json" \
+          --policy_file Ministry_of_Justice.json \
           --veracode_api_id "${VERACODE_API_ID}" \
           --veracode_api_key "${VERACODE_API_KEY}" \
           --timeout 60 \
