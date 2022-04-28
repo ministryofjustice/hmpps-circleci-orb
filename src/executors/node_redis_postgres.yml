@@ -1,0 +1,35 @@
+---
+description: >
+  Executor for node.js jobs with redis and postgres image
+docker:
+  - image: 'cimg/node:<<parameters.node_tag>>'
+  - image: 'circleci/redis:<<parameters.redis_tag>>'
+  - image: 'postgres:<< parameters.postgres_tag >>'
+    environment:
+      - POSTGRES_PASSWORD=<< parameters.postgres_password >>
+      - POSTGRES_USER=<< parameters.postgres_username >>
+      - POSTGRES_DB=<< parameters.postgres_db >>
+working_directory: ~/app
+resource_class: <<parameters.resource_class>>
+parameters:
+  resource_class:
+    default: medium
+    type: string
+  node_tag:
+    default: "14.16-browsers"
+    type: string
+  redis_tag:
+    default: "buster"
+    type: string
+  postgres_tag:
+    default: "14"
+    type: string
+  postgres_password:
+    default: "dev"
+    type: string
+  postgres_username:
+    default: "root"
+    type: string
+  postgres_db:
+    default: "postgres"
+    type: string
