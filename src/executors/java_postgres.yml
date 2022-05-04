@@ -15,10 +15,10 @@ parameters:
     default: medium
     type: string
   jdk_tag:
-    default: "17.0"
+    default: "none"
     type: string
   postgres_tag:
-    default: "14"
+    default: "none"
     type: string
   postgres_password:
     default: "dev"

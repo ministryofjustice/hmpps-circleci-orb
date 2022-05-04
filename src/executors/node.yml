@@ -10,5 +10,5 @@ parameters:
     default: medium
     type: string
   tag:
-    default: "14.16-browsers"
+    default: "none"
     type: string
