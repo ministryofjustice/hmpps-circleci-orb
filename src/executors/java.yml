@@ -10,5 +10,5 @@ parameters:
     default: medium
     type: string
   tag:
-    default: "11.0"
+    default: "none"
     type: string

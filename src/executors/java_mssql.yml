@@ -16,10 +16,10 @@ parameters:
     default: medium
     type: string
   jdk_tag:
-    default: "11.0"
+    default: "none"
     type: string
   mssql_tag:
-    default: "2019-CU11-ubuntu-20.04"
+    default: "none"
     type: string
   sa_password:
     default: "yourStrong(!)Password"

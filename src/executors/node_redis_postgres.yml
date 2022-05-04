@@ -16,13 +16,13 @@ parameters:
     default: medium
     type: string
   node_tag:
-    default: "14.16-browsers"
+    default: "none"
     type: string
   redis_tag:
-    default: "6.2"
+    default: "none"
     type: string
   postgres_tag:
-    default: "14.2"
+    default: "none"
     type: string
   postgres_password:
     default: "dev"
