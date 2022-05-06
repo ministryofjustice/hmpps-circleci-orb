@@ -10,5 +10,4 @@ parameters:
     default: medium
     type: string
   tag:
-    default: "none"
     type: string

@@ -11,8 +11,6 @@ parameters:
     default: medium
     type: string
   node_tag:
-    default: "none"
     type: string
   redis_tag:
-    default: "none"
     type: string

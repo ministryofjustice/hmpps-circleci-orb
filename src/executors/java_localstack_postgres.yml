@@ -25,10 +25,8 @@ parameters:
     default: medium
     type: string
   jdk_tag:
-    default: "none"
     type: string
   localstack_tag:
-    default: "none"
     type: string
   localstack_type:
     default: "localstack"
@@ -37,7 +35,6 @@ parameters:
     default: "sqs,sns"
     type: string
   postgres_tag:
-    default: "none"
     type: string
   postgres_password:
     default: "dev"
