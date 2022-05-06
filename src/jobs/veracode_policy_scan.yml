@@ -1,7 +1,9 @@
 ---
 description: >
   Veracode SAST policy scan
-executor: node
+executor:
+  name: java
+  tag: "17.0"
 parameters:
   slack_channel:
     type: string

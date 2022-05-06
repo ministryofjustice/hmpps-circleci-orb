@@ -4,7 +4,9 @@ description: >
 
   NOTE: You MUST have ran your `build_docker` job with the parameter
   `persist_container_image` set to `true`.
-executor: default_small
+executor:
+  name: default_small
+  tag: "3.10"
 parameters:
   publish_latest_tag:
     type: boolean

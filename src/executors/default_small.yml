@@ -7,5 +7,4 @@ working_directory: ~/app
 resource_class: small
 parameters:
   tag:
-    default: "3.9"
     type: string
