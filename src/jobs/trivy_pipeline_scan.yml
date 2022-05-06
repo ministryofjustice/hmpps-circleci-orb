@@ -1,7 +1,9 @@
 ---
 description: >
   Scan the built docker container for CVEs using Trivy.
-executor: default
+executor:
+  name: default
+  tag: "3.10"
 parameters:
   fail_build:
     type: boolean

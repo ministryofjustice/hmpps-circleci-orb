@@ -1,7 +1,9 @@
 ---
 description: >
   Job for running OWASP Dependency Check, looking for package dependencies with security vulnerabilities
-executor: java
+executor:
+  name: java
+  tag: "17.0"
 parameters:
   executor:
     description: The name of custom executor to use.

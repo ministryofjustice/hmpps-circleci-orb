@@ -16,10 +16,8 @@ parameters:
     default: medium
     type: string
   jdk_tag:
-    default: "none"
     type: string
   mssql_tag:
-    default: "none"
     type: string
   sa_password:
     default: "yourStrong(!)Password"

@@ -1,7 +1,9 @@
 ---
 description: >
   Notify Sentry.io of a release and deployment within your codebase
-executor: default_small
+executor:
+  name: default_small
+  tag: "3.10"
 parameters:
   sentry_org:
     type: string

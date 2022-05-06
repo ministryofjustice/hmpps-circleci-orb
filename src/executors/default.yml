@@ -10,5 +10,4 @@ parameters:
     default: medium
     type: string
   tag:
-    default: "3.9"
     type: string

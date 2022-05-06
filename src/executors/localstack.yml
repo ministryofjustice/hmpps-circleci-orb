@@ -21,10 +21,8 @@ parameters:
     default: medium
     type: string
   jdk_tag:
-    default: "none"
     type: string
   localstack_tag:
-    default: "none"
     type: string
   localstack_type:
     default: "localstack"

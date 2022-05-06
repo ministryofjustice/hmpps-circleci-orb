@@ -5,7 +5,9 @@ description: >
   This is intended to be a scheduled job that runs maybe daily and can
   alert teams to new found issues on running applications that might not
   be in active development.
-executor: default
+executor:
+  name: default
+  tag: "3.10"
 parameters:
   image_name:
     type: string

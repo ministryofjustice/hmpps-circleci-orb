@@ -1,7 +1,9 @@
 ---
 description: >
   Node.js projects using npm - auditing package dependencies for security vulnerabilities
-executor: node
+executor:
+  name: node
+  tag: "16.15"
 parameters:
   slack_channel:
     type: string
