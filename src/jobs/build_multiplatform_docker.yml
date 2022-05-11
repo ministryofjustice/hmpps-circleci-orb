@@ -17,13 +17,6 @@ parameters:
   docker_version:
     type: string
     default: "20.10.11"
-  publish:
-    type: boolean
-    default: true
-  persist_container_image:
-    type: boolean
-    default: false
-    description: Make the built container image available for subsequent jobs
   no_output_timeout:
     type: string
     default: 30m
@@ -80,7 +73,10 @@ steps:
         docker run --rm --privileged tonistiigi/binfmt --install all
         docker buildx create --use multi-arch-build --platform linux/arm64,linux/amd64
   - run:
-      name: Build container image
+      name: quay.io login
+      command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+  - run:
+      name: Build and publish container image
       no_output_timeout: << parameters.no_output_timeout >>
       command: |
         docker buildx build \
@@ -90,26 +86,15 @@ steps:
           --build-arg BUILD_NUMBER=$APP_VERSION \
           --build-arg GIT_REF=$CIRCLE_SHA1 \
           --tag "${IMAGE_NAME}:${APP_VERSION}" \
+          --tag "${IMAGE_NAME}:latest" \
           --label "maintainer=dps-hmpps@digital.justice.gov.uk" \
           --label "app.version=${APP_VERSION}" \
           --label "build.version=${APP_VERSION}" \
           --label "build.number=${CIRCLE_BUILD_NUM}" \
           --label "build.url=${CIRCLE_BUILD_URL}" \
           --label "build.gitref=${CIRCLE_SHA1}" \
+          --push \
           << parameters.additional_docker_build_args >>
-
-  - when:
-      condition: << parameters.persist_container_image >>
-      steps:
-        - run:
-            name: Persist container image to workspace
-            command: |
-              mkdir -p docker_cache
-              docker save ${IMAGE_NAME}:${APP_VERSION} -o docker_cache/build_image.tar
-        - persist_to_workspace:
-            root: ~/app
-            paths:
-              - docker_cache
 
   - when:
       condition: << parameters.snyk-scan >>
@@ -122,19 +107,7 @@ steps:
             severity-threshold: << parameters.snyk-threshold >>
             fail-on-issues: << parameters.snyk-fail-build >>
             additional-arguments: << parameters.snyk-args >>
-            monitor-on-build: << parameters.publish >>
-
-  - when:
-      condition: <<parameters.publish>>
-      steps:
-        - run:
-            name: Publish image to repository
-            command: |
-              #push to quay.io
-              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-              docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
-              docker push "<< parameters.image_name >>:${APP_VERSION}"
-              docker push "<< parameters.image_name >>:latest"
+            monitor-on-build: true
 
   - when:
       condition: << parameters.jira_update >>
