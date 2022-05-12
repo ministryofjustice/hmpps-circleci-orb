@@ -14,7 +14,7 @@ parameters:
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
   docker_version:
     type: string
-    default: "20.10.6"
+    default: "20.10.14"
   trivy_template:
     type: string
     default: <<include(files/trivy.tpl)>>

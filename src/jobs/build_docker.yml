@@ -16,7 +16,7 @@ parameters:
     default: ""
   docker_version:
     type: string
-    default: "20.10.6"
+    default: "20.10.14"
   publish:
     type: boolean
     default: true

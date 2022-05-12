@@ -16,7 +16,7 @@ parameters:
     default: ""
   docker_version:
     type: string
-    default: "20.10.11"
+    default: "20.10.14"
   no_output_timeout:
     type: string
     default: 30m

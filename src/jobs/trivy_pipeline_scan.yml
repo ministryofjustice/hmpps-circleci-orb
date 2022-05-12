@@ -23,7 +23,7 @@ parameters:
     description: Cache key for the vulnerability database - change to break the cache.
   docker_version:
     type: string
-    default: "20.10.6"
+    default: "20.10.14"
 steps:
   - checkout
   - setup_remote_docker:
