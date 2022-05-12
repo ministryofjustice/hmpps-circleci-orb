@@ -9,7 +9,7 @@ parameters:
     default: "/app"
   docker_version:
     type: string
-    default: "20.10.6"
+    default: "20.10.14"
 steps:
   - setup_remote_docker:
       docker_layer_caching: true
