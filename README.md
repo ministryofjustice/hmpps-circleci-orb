@@ -1,6 +1,6 @@
 # HMPPS Orb [![CircleCI Build Status](https://circleci.com/gh/ministryofjustice/hmpps-circleci-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/ministryofjustice/hmpps-circleci-orb) [![Orb Version Badge](https://badges.circleci.com/orbs/ministryofjustice/hmpps.svg)](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/ministryofjustice/hmpps-circleci-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-HMPPS circleci orb - reusable config for hmpps teams. If you would like to start using and contribute to this project please contact the DPS team.
+HMPPS circleci orb - reusable config for hmpps teams. If you would like to start using and contribute to this project please contact the [#hmpps_dev](https://mojdt.slack.com/archives/C69NWE339) channel in slack or raise an issue in this project.
 
 ## Usage
 
