@@ -20,6 +20,8 @@ circleci orb pack ./src | circleci orb validate -
 circleci orb pack ./src | circleci orb publish -  ministryofjustice/hmpps@dev:alpha
 ```
 
+Once you do this you will need to run the pipeline again.
+
 You may also get an error if the `dev:alpha` version is out of date and there are config changes in the latest orb that aren't in the dev alpha version.
 
 ## Slack notifications
