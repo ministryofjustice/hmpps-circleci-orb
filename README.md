@@ -41,7 +41,7 @@ We welcome [issues](https://github.com/ministryofjustice/hmpps-circleci-orb/issu
 
 To publish a new production version:
 * Create a PR to the `Alpha` branch with your changes. This will act as a "staging" branch.
-* When ready to publish a new production version, create a PR from `Alpha` to `master`. The Git Subject should include `[semver:patch|minor|release|skip]` to indicate the type of release.
+* When ready to publish a new production version, create a PR from `Alpha` to `master`. The Git Subject (commit message of the most recent commit - `git log -1 --pretty=%s.`) should include `[semver:patch|minor|release|skip]` to indicate the type of release.
 * On merge, the release will be published to the orb registry automatically.
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).

@@ -3,12 +3,15 @@ description: >
   Node.js projects using npm - auditing package dependencies for security vulnerabilities
 executor:
   name: node
-  tag: "16.15"
+  tag: <<parameters.node_tag>>
 parameters:
   slack_channel:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
+  node_tag:
+    type: string
+    default: "16.15"
 steps:
   - checkout
   - restore_cache:
