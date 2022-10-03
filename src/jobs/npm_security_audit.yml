@@ -3,13 +3,13 @@ description: >
   Node.js projects using npm - auditing package dependencies for security vulnerabilities
 executor:
   name: node
-  tag: <<parameters.node_version>>
+  tag: <<parameters.node_tag>>
 parameters:
   slack_channel:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
-  node_version:
+  node_tag:
     type: string
     default: "16.15"
 steps:
