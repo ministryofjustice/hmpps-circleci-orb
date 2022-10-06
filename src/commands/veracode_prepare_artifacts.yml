@@ -7,13 +7,9 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
-  docker_version:
-    type: string
-    default: "20.10.14"
 steps:
   - setup_remote_docker:
       docker_layer_caching: true
-      version: << parameters.docker_version >>
   - checkout
   - run:
       name: Build temp docker image and copy app files

@@ -21,13 +21,9 @@ parameters:
     type: string
     default: v1
     description: Cache key for the vulnerability database - change to break the cache.
-  docker_version:
-    type: string
-    default: "20.10.14"
 steps:
   - checkout
-  - setup_remote_docker:
-      version: << parameters.docker_version >>
+  - setup_remote_docker
   - recall_container_image
   - install_trivy
   - restore_cache:
