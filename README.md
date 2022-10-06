@@ -6,6 +6,10 @@ HMPPS circleci orb - reusable config for hmpps teams. If you would like to start
 
 Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/ministryofjustice/hmpps#usage-examples). Source for these examples can be found within the `src/examples` directory.
 
+## Release Notes
+
+##### [6.0.0](release-notes/6.0.0.md)
+
 ## Known Issue
 
 You may get this error when pushing a new PR:
@@ -41,6 +45,7 @@ We welcome [issues](https://github.com/ministryofjustice/hmpps-circleci-orb/issu
 
 To publish a new production version:
 * Create a PR to the `Alpha` branch with your changes. This will act as a "staging" branch.
+* Consider adding to the release notes. Especially for breaking changes.
 * When ready to publish a new production version, create a PR from `Alpha` to `master`. The Git Subject (commit message of the most recent commit - `git log -1 --pretty=%s.`) should include `[semver:patch|minor|release|skip]` to indicate the type of release.
 * On merge, the release will be published to the orb registry automatically.
 
