@@ -16,6 +16,8 @@ docker:
     environment:
       - POSTGRES_PASSWORD=<< parameters.postgres_password >>
       - POSTGRES_USER=<< parameters.postgres_username >>
+      # postgres defaults the database name to the username if the POSTGRES_DB parameter isn't specified
+      - POSTGRES_DB=\<< #parameters.postgres_db >><< parameters.postgres_db >><< /parameters.postgres_db >><< ^parameters.postgres_db >><< parameters.postgres_username >><< /parameters.postgres_db >>
 environment:
   _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
 working_directory: ~/app
@@ -41,4 +43,7 @@ parameters:
     type: string
   postgres_username:
     default: "root"
+    type: string
+  postgres_db:
+    default: ""
     type: string
