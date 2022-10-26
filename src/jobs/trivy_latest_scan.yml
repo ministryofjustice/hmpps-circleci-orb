@@ -52,6 +52,7 @@ steps:
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
+          --skip-files /app/agent.jar \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
@@ -69,6 +70,7 @@ steps:
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
+          --skip-files /app/agent.jar \
           --output results.txt \
           --format template \
           --template '<< parameters.trivy_template >>' \

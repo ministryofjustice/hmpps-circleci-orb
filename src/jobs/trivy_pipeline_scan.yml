@@ -45,6 +45,7 @@ steps:
           --severity << parameters.cve_severities_to_check >> \
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
+          --skip-files /app/agent.jar \
           << parameters.additional_args >> "${IMAGE_NAME}:${APP_VERSION}"
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
