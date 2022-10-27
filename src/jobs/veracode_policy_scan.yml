@@ -25,7 +25,7 @@ steps:
   - run:
       name: "Download/Extract veracode agent"
       command: |
-        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/21.12.9.1/vosp-api-wrappers-java-21.12.9.1.jar -O VeracodeJavaAPI.jar
+        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/22.9.10.3/vosp-api-wrappers-java-22.9.10.3.jar -O VeracodeJavaAPI.jar
   - run:
       name: "Upload to Veracode"
       command: |
@@ -36,7 +36,7 @@ steps:
         -action UploadAndScan \
         -appname ${CIRCLE_PROJECT_REPONAME} \
         -createprofile true \
-        -deleteincompletescan true \
+        -deleteincompletescan 2 \
         -version "CircleCI-${CIRCLE_BUILD_NUM}" \
         -filepath source.zip \
         2>&1 | tee output.txt
