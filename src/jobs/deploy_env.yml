@@ -58,6 +58,9 @@ parameters:
       - testing
       - development
       - unmapped
+  helm_timeout:
+    type: string
+    default: 15m
 steps:
   - checkout
   - k8s_setup
@@ -90,6 +93,7 @@ steps:
         HELM_REPO: << parameters.helm_repo >>
         ENV_NAME: << parameters.env >>
         HELM_ADDITIONAL_ARGS: << parameters.helm_additional_args >>
+        HELM_TIMEOUT: << parameters.helm_timeout >>
       command: <<include(scripts/deploy_env.sh)>>
   - when:
       condition: <<parameters.slack_notification>>

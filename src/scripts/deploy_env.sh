@@ -24,7 +24,7 @@ helm dependency update "${CHART_NAME}"
 HELM_ARGS=(--wait \
   --install \
   --reset-values \
-  --timeout 15m \
+  --timeout $HELM_TIMEOUT \
   --history-max 10 \
   --values "values-${ENV_NAME}.yaml")
 
