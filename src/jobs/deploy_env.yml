@@ -80,7 +80,7 @@ steps:
             name: Store deployment changelog
             command: |
               DEPLOYMENT_CHANGELOG="$(<.deployment_changelog)"
-              echo "export DEPLOYMENT_CHANGELOG_JSON=$(echo -n "$DEPLOYMENT_CHANGELOG" | tr '"' "'" | jq -Rs)" >> $BASH_ENV
+              echo "export DEPLOYMENT_CHANGELOG_JSON=$(echo -n "$DEPLOYMENT_CHANGELOG" | tr '"' "'" | tr "\`" "'" | jq -Rs)" >> $BASH_ENV
   - mem/recall:
       env_var: APP_VERSION
   - deploy:
