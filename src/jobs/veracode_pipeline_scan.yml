@@ -57,3 +57,7 @@ steps:
       event: fail
       channel: << parameters.slack_channel >>
       custom: <<include(files/slack_failed_with_results.tpl.json)>>
+  - store_artifacts:
+      path: results.json
+  - store_artifacts:
+      path: results.txt
