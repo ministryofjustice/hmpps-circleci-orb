@@ -1,0 +1,32 @@
+---
+description: >
+  Node.js projects using npm - check if package dependencies are outdated
+executor:
+  name: node
+  tag: <<parameters.node_tag>>
+parameters:
+  dependencies_to_check:
+    type: string
+    default: typescript govuk-frontend
+    description: Dependencies to check if they are outdated.
+  slack_channel:
+    type: string
+    default: dps_alerts_security
+    description: Slack channel to use for notifications.
+  node_tag:
+    type: string
+    default: "16.15"
+steps:
+  - checkout
+  - restore_cache:
+      key: dependency-cache-{{ checksum "package.json" }}
+  - run:
+      name: install-npm
+      command: 'npm ci --no-audit'
+  - run:
+      name: run-outdated
+      command: 'npm outdated << parameters.dependencies_to_check >>'
+  - slack/notify:
+      event: fail
+      channel: << parameters.slack_channel >>
+      custom: <<include(files/slack_failed.tpl.json)>>
