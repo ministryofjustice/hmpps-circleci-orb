@@ -60,7 +60,7 @@ parameters:
       - unmapped
   helm_timeout:
     type: string
-    default: 15m
+    default: 5m
 steps:
   - checkout
   - k8s_setup
