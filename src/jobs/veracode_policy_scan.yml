@@ -19,17 +19,15 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
+docker:
+  - image: 'veracode/api-wrapper-java:latest'
 steps:
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
   - run:
-      name: "Download/Extract veracode agent"
-      command: |
-        wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/22.9.10.3/vosp-api-wrappers-java-22.9.10.3.jar -O VeracodeJavaAPI.jar
-  - run:
       name: "Upload to Veracode"
       command: |
-        java -jar VeracodeJavaAPI.jar \
+        java -jar /opt/veracode/api-wrapper.jar \
         -vid "${VERACODE_API_ID}" \
         -vkey "${VERACODE_API_KEY}" \
         -teams "<< parameters.teams >>" \

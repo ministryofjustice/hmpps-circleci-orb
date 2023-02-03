@@ -13,14 +13,11 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
+docker:
+  - image: 'veracode/pipeline-scan:latest'
 steps:
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
-  - run:
-      name: Download/Extract-Veracode-Pipeline-Scanner
-      command: |
-        wget https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip -O pipeline-scan.zip
-        unzip pipeline-scan.zip -x README.md
   - restore_cache:
       keys:
         - veracode-baseline-results-{{ .Branch }}
@@ -36,7 +33,7 @@ steps:
       name: Scan Project
       no_output_timeout: 30m
       command: |
-        java -jar pipeline-scan.jar \
+          java -jar /opt/veracode/pipeline-scan.jar \
           $(test -f results.json && echo "--baseline_file results.json") \
           --json_output true \
           --file source.zip \
