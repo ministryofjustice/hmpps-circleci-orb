@@ -129,7 +129,7 @@ steps:
               NUM=`echo -n $TAG | wc -c`
               if [ $NUM -gt 0 ] then
                 docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
-                docker push "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
+                docker push "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
               fi
 
   - when:
