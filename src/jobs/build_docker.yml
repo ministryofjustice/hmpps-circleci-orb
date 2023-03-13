@@ -122,7 +122,7 @@ steps:
             command: |
               #push to quay.io
               docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-              docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest" 
+              docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
               TAG="<< parameters.additional_docker_tag >>"
