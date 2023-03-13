@@ -11,6 +11,9 @@ parameters:
   dockerfile_dir:
     type: string
     default: "."
+  additional_docker_tag:
+    type: string
+    default: ""
   additional_docker_build_args:
     type: string
     default: ""
@@ -119,7 +122,13 @@ steps:
             command: |
               #push to quay.io
               docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-              docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
+              TAG="<< parameters.additional_docker_tag >>"
+              NUM=`echo -n $TAG | wc -c`
+              if [ $NUM -eq 0 ] then
+                docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
+              else
+                docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest" "<< parameters.image_name >>":<< parameters.additional_docker_tag >>'
+              fi
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
 
