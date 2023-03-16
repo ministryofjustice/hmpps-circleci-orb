@@ -127,8 +127,10 @@ steps:
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
               TAG="<< parameters.additional_docker_tag >>"
-              NUM=`echo -n $TAG | wc -c`
-              if [ $NUM -gt 0 ] then
+              echo "export TAG=$TAG" >> $BASH_ENV
+              NUM=$(echo -n $TAG | wc -c)
+              echo "export NUM=$NUM" >> $BASH_ENV
+              if [ $NUM -gt 0 ]; then
                 docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
                 docker push "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
               fi
