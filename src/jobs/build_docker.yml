@@ -11,6 +11,10 @@ parameters:
   dockerfile_dir:
     type: string
     default: "."
+  additional_docker_tag:
+    type: string
+    default: ""
+    description: Additional docker tag that can be used to specify stable tags
   additional_docker_build_args:
     type: string
     default: ""
@@ -122,6 +126,14 @@ steps:
               docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
+              TAG="<< parameters.additional_docker_tag >>"
+              echo "export TAG=$TAG" >> $BASH_ENV
+              NUM=$(echo -n $TAG | wc -c)
+              echo "export NUM=$NUM" >> $BASH_ENV
+              if [ $NUM -gt 0 ]; then
+                docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
+                docker push "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
+              fi
 
   - when:
       condition: << parameters.jira_update >>
