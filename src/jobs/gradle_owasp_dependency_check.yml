@@ -3,7 +3,7 @@ description: >
   Job for running OWASP Dependency Check, looking for package dependencies with security vulnerabilities
 executor:
   name: java
-  tag: "17.0"
+  tag: <<parameters.jdk_tag>>
 parameters:
   cve_data_directory:
     description: The plugin database directory.
@@ -29,6 +29,9 @@ parameters:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
+  jdk_tag:
+    default: "17.0"
+    type: string
 steps:
   - checkout
   - gradle/with_cache:
