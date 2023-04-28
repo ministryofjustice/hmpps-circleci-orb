@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# Print out env vars that should come from the circleci step to help verify they are correct and present
+echo RELEASE_NAME="${RELEASE_NAME}"
+echo CHART_NAME="${CHART_NAME}"
+echo CHART_VERSION="${CHART_VERSION}"
+echo HELM_REPO="${HELM_REPO}"
+echo ENV_NAME="${ENV_NAME}"
+echo HELM_ADDITIONAL_ARGS="${HELM_ADDITIONAL_ARGS}"
+echo HELM_TIMEOUT="${HELM_TIMEOUT}"
+
 if [[ ${RELEASE_NAME} == "PROJECT_NAME_ENV_NAME" ]]; then
   RELEASE_NAME="${CIRCLE_PROJECT_REPONAME}-${ENV_NAME}"
 elif [[ ${RELEASE_NAME} == "PROJECT_NAME" ]]; then
