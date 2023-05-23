@@ -61,8 +61,18 @@ parameters:
   helm_timeout:
     type: string
     default: 5m
+  checkout_branch_override:
+    type: string
+    default: ''
 steps:
-  - checkout
+  - when:
+      condition: <<parameters.checkout_branch_override>>
+      steps:
+        - run: git clone -b "<<parameters.checkout_branch_override>>" "$CIRCLE_REPOSITORY_URL"
+  - unless:
+      condition: <<parameters.checkout_branch_override>>
+      steps:
+        - checkout
   - k8s_setup
   - install_helm
   - install_aws_cli
