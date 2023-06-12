@@ -38,10 +38,13 @@ HELM_ARGS=(--wait \
   --values "values-${ENV_NAME}.yaml")
 
 # Set the image tag for this deployment
-if helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
-  HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
-else
+# Print dependency list for debugging issue with circleci
+helm dependency list "${CHART_NAME}"
+if ! helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
   HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
+else
+  # default is to set generic-service.image.tag which most apps use
+  HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
 fi
 
 read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
