@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# Print out env vars that should come from the circleci step to help verify they are correct and present
-echo RELEASE_NAME="${RELEASE_NAME}"
-echo CHART_NAME="${CHART_NAME}"
-echo CHART_VERSION="${CHART_VERSION}"
-echo HELM_REPO="${HELM_REPO}"
-echo ENV_NAME="${ENV_NAME}"
-echo HELM_ADDITIONAL_ARGS="${HELM_ADDITIONAL_ARGS}"
-echo HELM_TIMEOUT="${HELM_TIMEOUT}"
-
 if [[ ${RELEASE_NAME} == "PROJECT_NAME_ENV_NAME" ]]; then
   RELEASE_NAME="${CIRCLE_PROJECT_REPONAME}-${ENV_NAME}"
 elif [[ ${RELEASE_NAME} == "PROJECT_NAME" ]]; then
@@ -38,14 +29,14 @@ HELM_ARGS=(--wait \
   --values "values-${ENV_NAME}.yaml")
 
 # Set the image tag for this deployment
-# Print dependency list for debugging issue with circleci
-helm dependency list "${CHART_NAME}"
+# Add debugging output
+set -x
 if ! helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
   HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
 else
-  # default is to set generic-service.image.tag which most apps use
   HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
 fi
+set +x
 
 read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
 
