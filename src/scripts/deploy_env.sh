@@ -31,7 +31,7 @@ HELM_ARGS=(--wait \
 # Set the image tag for this deployment
 # Add debugging output
 set -x
-if ! helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
+if ! helm dependency list "${CHART_NAME}" | grep generic-service; then
   HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
 else
   HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
