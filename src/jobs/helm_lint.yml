@@ -17,12 +17,18 @@ parameters:
   helm_additional_args:
     type: string
     default: ""
+  perform-checkout:
+    type: boolean
+    default: true
 steps:
-  - checkout
+  - when:
+      condition: << parameters.perform-checkout >>
+      steps:
+        - checkout
   - install_helm
   - run:
       name: Run helm lint
       command: |
+        cd << parameters.helm_dir >>
         helm dependency update << parameters.chart_name >>
         helm lint << parameters.chart_name >> --values=values-<< parameters.env >>.yaml << parameters.helm_additional_args >>
-      working_directory: << parameters.helm_dir >>
