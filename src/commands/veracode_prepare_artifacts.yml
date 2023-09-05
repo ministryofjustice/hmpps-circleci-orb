@@ -16,7 +16,7 @@ steps:
       no_output_timeout: 20m
       command: |
         export DOCKER_BUILDKIT=1
-        IMAGE_ID=$(docker build -q . --build-arg BUILD_NUMBER=$CIRCLE_SHA1 --build-arg GIT_REF=$CIRCLE_SHA1)
+        IMAGE_ID=$(docker build -q . --build-arg BUILD_NUMBER=$CIRCLE_SHA1 --build-arg GIT_REF=$CIRCLE_SHA1 --build-arg GIT_BRANCH=$CIRCLE_BRANCH)
         docker cp $(docker create --rm ${IMAGE_ID}):<< parameters.docker_image_app_dir >> ./temp_app
   - run:
       name: Zip files ready for Veracode scan
