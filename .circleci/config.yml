@@ -101,6 +101,7 @@ workflows:
       # be skipped.
       # e.g. [semver:patch] will cause a patch version to be published.
       - orb-tools/dev-promote-prod-from-commit-subject:
+          context: hmpps-circleci-orb
           orb-name: ministryofjustice/hmpps
 
           add-pr-comment: false
