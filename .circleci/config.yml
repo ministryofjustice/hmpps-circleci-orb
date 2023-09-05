@@ -45,6 +45,7 @@ workflows:
           dir: ./src/scripts
       # Publish development version(s) of the orb.
       - orb-tools/publish-dev:
+          context: hmpps-circleci-orb
           orb-name: ministryofjustice/hmpps
           requires:
             - orb-tools/lint
