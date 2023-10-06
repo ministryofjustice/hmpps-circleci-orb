@@ -28,7 +28,7 @@ HELM_ARGS=(--wait \
   --history-max 10 \
   --values "values-${ENV_NAME}.yaml")
 
-if [[ ! -z ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
+if [[ -n ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
   echo "${IP_ALLOWLIST_GROUPS_YAML}" | base64 -D > ip-allowlist-groups.yaml
   echo "${IP_ALLOWLIST_GROUPS_VERSION}" | base64 -D > ip-allowlist-groups.yaml
   HELM_ARGS+=("--values" "ip-allowlist-groups.yaml")
