@@ -30,10 +30,13 @@ HELM_ARGS=(--wait \
 
 if [[ -n ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
   echo "${IP_ALLOWLIST_GROUPS_YAML}" | base64 -D > ip-allowlist-groups.yaml
-  echo "${IP_ALLOWLIST_GROUPS_VERSION}" | base64 -D > ip-allowlist-groups.yaml
   HELM_ARGS+=("--values" "ip-allowlist-groups.yaml")
+fi
+
+if [[ -n ${IP_ALLOWLIST_GROUPS_VERSION} ]]; then
   HELM_ARGS+=("--set" "generic-service.allowlist_version=${IP_ALLOWLIST_GROUPS_VERSION}")
 fi
+
 
 # Set the image tag for this deployment
 # Add debugging output
