@@ -30,7 +30,7 @@ HELM_ARGS=(--wait \
 
 # See https://github.com/ministryofjustice/hmpps-ip-allowlists
 if [[ -n ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
-  echo "${IP_ALLOWLIST_GROUPS_YAML}" | base64 -D > ip-allowlist-groups.yaml
+  echo "${IP_ALLOWLIST_GROUPS_YAML}" | base64 --decode > ip-allowlist-groups.yaml
   HELM_ARGS+=("--values" "ip-allowlist-groups.yaml")
 fi
 if [[ -n ${IP_ALLOWLIST_GROUPS_VERSION} ]]; then
