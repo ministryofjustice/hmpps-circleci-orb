@@ -56,3 +56,6 @@ if [[ ${CHART_VERSION} != "latest" ]]; then
 fi
 
 helm upgrade "${RELEASE_NAME}" "${CHART_NAME}" "${HELM_ARGS[@]}"
+
+# store release name for use by slack notification
+echo "export RELEASE_NAME=$RELEASE_NAME" >> "$BASH_ENV"

@@ -108,7 +108,7 @@ steps:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "*${CIRCLE_PROJECT_REPONAME}* version `${APP_VERSION}` deploy to *<< parameters.env >>*"
+                      "text": "*${RELEASE_NAME}* version `${APP_VERSION}` deploy to *<< parameters.env >>*"
                     },
                     "accessory": {
                       "type": "button",
