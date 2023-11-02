@@ -63,6 +63,22 @@ parameters:
     default: 5m
 steps:
   - checkout
+  - run:
+      name: Set kube env variables for << parameters.env >>
+      command: |
+        ENV_KUBE_ENV_NAME="<< parameters.env >>_KUBE_ENV_NAME"
+        if [[ -n "${!ENV_KUBE_ENV_NAME}" ]]; then
+          # We're good, so promote them up a level
+          ENV_KUBE_ENV_API="<< parameters.env >>_KUBE_ENV_API"
+          ENV_KUBE_ENV_CACERT="<< parameters.env >>_KUBE_ENV_CACERT"
+          ENV_KUBE_ENV_TOKEN="<< parameters.env >>_KUBE_ENV_TOKEN"
+          ENV_KUBE_ENV_NAMESPACE="<< parameters.env >>_KUBE_ENV_NAMESPACE"
+          echo "export KUBE_ENV_NAME=${!ENV_KUBE_ENV_NAME}" >> $BASH_ENV
+          echo "export KUBE_ENV_API=${!ENV_KUBE_ENV_API}" >> $BASH_ENV
+          echo "export KUBE_ENV_CACERT=${!ENV_KUBE_ENV_CACERT}" >> $BASH_ENV
+          echo "export KUBE_ENV_TOKEN=${!ENV_KUBE_ENV_TOKEN}" >> $BASH_ENV
+          echo "export KUBE_ENV_NAMESPACE=${!ENV_KUBE_ENV_NAMESPACE}" >> $BASH_ENV
+        fi
   - k8s_setup
   - install_helm
   - install_aws_cli
