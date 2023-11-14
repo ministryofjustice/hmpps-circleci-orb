@@ -2,7 +2,7 @@
 docker:
   - image: cimg/openjdk:<<parameters.tag>>
 environment:
-  _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
+  _JAVA_OPTIONS: <<parameters.java_options>>
 working_directory: ~/app
 resource_class: <<parameters.resource_class>>
 parameters:
@@ -10,4 +10,7 @@ parameters:
     default: medium
     type: string
   tag:
+    type: string
+  java_options:
+    default: -Xmx512m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
     type: string
