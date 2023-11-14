@@ -61,6 +61,14 @@ parameters:
   helm_timeout:
     type: string
     default: 5m
+  pipeline_id:
+    type: string
+    default: ""
+    description: Required if jira_update is set (otherwise the Notify Jira job will pass but do nothing), passed in as << pipeline.id >>
+  pipeline_number:
+    type: integer
+    default: 0
+    description: Required if jira_update is set, passed in as << pipeline.number >>
 steps:
   - checkout
   - k8s_setup
@@ -142,3 +150,5 @@ steps:
             job_type: deployment
             environment: << parameters.env >>
             environment_type: << parameters.jira_env_type >>
+            pipeline_id: << parameters.pipeline_id >>
+            pipeline_number: << parameters.pipeline_number >>
