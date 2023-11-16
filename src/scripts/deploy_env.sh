@@ -28,12 +28,24 @@ HELM_ARGS=(--wait \
   --history-max 10 \
   --values "values-${ENV_NAME}.yaml")
 
-# Set the image tag for this deployment
-if helm dependency list "${CHART_NAME}" | grep generic-service --silent; then
-  HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
-else
-  HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
+# See https://github.com/ministryofjustice/hmpps-ip-allowlists
+if [[ -n ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
+  echo "${IP_ALLOWLIST_GROUPS_YAML}" | base64 --decode > ip-allowlist-groups.yaml
+  HELM_ARGS+=("--values" "ip-allowlist-groups.yaml")
 fi
+if [[ -n ${IP_ALLOWLIST_GROUPS_VERSION} ]]; then
+  HELM_ARGS+=("--set" "generic-service.allowlist_version=${IP_ALLOWLIST_GROUPS_VERSION}")
+fi
+
+# Set the image tag for this deployment
+# Add debugging output
+set -x
+if ! helm dependency list "${CHART_NAME}" | grep generic-service; then
+  HELM_ARGS+=("--set" "image.tag=${APP_VERSION}")
+else
+  HELM_ARGS+=("--set" "generic-service.image.tag=${APP_VERSION}")
+fi
+set +x
 
 read -r -a extra_args <<< "${HELM_ADDITIONAL_ARGS}"
 
@@ -44,3 +56,6 @@ if [[ ${CHART_VERSION} != "latest" ]]; then
 fi
 
 helm upgrade "${RELEASE_NAME}" "${CHART_NAME}" "${HELM_ARGS[@]}"
+
+# store release name for use by slack notification
+echo "export RELEASE_NAME=$RELEASE_NAME" >> "$BASH_ENV"

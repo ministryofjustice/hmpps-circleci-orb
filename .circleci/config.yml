@@ -45,6 +45,7 @@ workflows:
           dir: ./src/scripts
       # Publish development version(s) of the orb.
       - orb-tools/publish-dev:
+          context: hmpps-circleci-orb
           orb-name: ministryofjustice/hmpps
           requires:
             - orb-tools/lint
@@ -54,6 +55,7 @@ workflows:
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/trigger-integration-tests-workflow:
+          context: hmpps-circleci-orb
           name: trigger-integration-dev
           requires:
             - orb-tools/publish-dev
@@ -101,6 +103,7 @@ workflows:
       # be skipped.
       # e.g. [semver:patch] will cause a patch version to be published.
       - orb-tools/dev-promote-prod-from-commit-subject:
+          context: hmpps-circleci-orb
           orb-name: ministryofjustice/hmpps
 
           add-pr-comment: false

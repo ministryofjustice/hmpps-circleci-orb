@@ -3,7 +3,7 @@ description: >
   Job for running OWASP Dependency Check, looking for package dependencies with security vulnerabilities
 executor:
   name: java
-  tag: "17.0"
+  tag: <<parameters.jdk_tag>>
 parameters:
   cve_data_directory:
     description: The plugin database directory.
@@ -29,6 +29,9 @@ parameters:
     type: string
     default: dps_alerts_security
     description: Slack channel to use for notifications.
+  jdk_tag:
+    default: "17.0"
+    type: string
 steps:
   - checkout
   - gradle/with_cache:
@@ -57,32 +60,4 @@ steps:
   - slack/notify:
       event: fail
       channel: << parameters.slack_channel >>
-      custom: |
-        {
-          "blocks": [
-            {
-              "type": "context",
-              "elements": [
-                {
-                  "type": "mrkdwn",
-                  "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
-                }
-              ]
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "*${CIRCLE_PROJECT_REPONAME}* failed ${CIRCLE_JOB}"
-              },
-              "accessory": {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "View job"
-                },
-                "url": "${CIRCLE_BUILD_URL}"
-              }
-            }
-          ]
-        }
+      custom: <<include(files/slack_failed.tpl.json)>>
