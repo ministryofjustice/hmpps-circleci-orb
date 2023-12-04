@@ -13,7 +13,7 @@ docker:
       - DEFAULT_REGION=eu-west-2
       - TMPDIR=/private
 environment:
-  _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
+  _JAVA_OPTIONS: <<parameters.java_options>>
 working_directory: ~/app
 resource_class: <<parameters.resource_class>>
 parameters:
@@ -29,4 +29,7 @@ parameters:
     type: string
   services:
     default: "sqs,sns"
+    type: string
+  java_options:
+    default: -Xmx512m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
     type: string
