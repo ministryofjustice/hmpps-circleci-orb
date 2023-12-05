@@ -125,7 +125,6 @@ steps:
               echo "export NOTIFY_SLACK_CHANNELS=$NOTIFY_SLACK_CHANNELS" >> $BASH_ENV
         - slack/notify:
             event: always
-            #Always send to HMPPS releases channel, plus team channel
             channel: ${NOTIFY_SLACK_CHANNELS}
             custom: |
               {
