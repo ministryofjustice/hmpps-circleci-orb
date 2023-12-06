@@ -110,17 +110,17 @@ steps:
             name: Slack channels to notify
             command: |
               # For prod releases only always notify central dps-releases channel in addition to custom team channels.
-              if [[ "<< parameters.env >>" == "prod" ]] || [[ "<< parameters.env >>" == "production" ]]; then
+              if [[ "<< parameters.env >>" == "prod" || "<< parameters.env >>" == "production" ]]; then
                 # By default send to channel ID CVA3MKDTR = #dps-releases
-                if [[ "<< parameters.slack_channel_name >>" == "CVA3MKDTR" ]] || [[ "<< parameters.slack_channel_name >>" == "dps-releases" ]]; then
-                  export NOTIFY_SLACK_CHANNELS="CVA3MKDTR"
+                if [[ "<< parameters.slack_channel_name >>" == "CVA3MKDTR" || "<< parameters.slack_channel_name >>" == "dps-releases" ]]; then
+                  NOTIFY_SLACK_CHANNELS="CVA3MKDTR"
                 else
                   # Also send to custom team channel
-                  export NOTIFY_SLACK_CHANNELS="CVA3MKDTR,<< parameters.slack_channel_name >>"
+                  NOTIFY_SLACK_CHANNELS="CVA3MKDTR,<< parameters.slack_channel_name >>"
                 fi
               else
-                # non prod env, send to custom team channel.
-                export NOTIFY_SLACK_CHANNELS="<< parameters.slack_channel_name >>"
+                # non prod envs, send to custom team channel.
+                NOTIFY_SLACK_CHANNELS="<< parameters.slack_channel_name >>"
               fi
               echo "export NOTIFY_SLACK_CHANNELS=$NOTIFY_SLACK_CHANNELS" >> $BASH_ENV
         - slack/notify:
