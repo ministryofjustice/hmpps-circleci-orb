@@ -31,7 +31,7 @@ parameters:
     description: When true, notifies a Slack channel after every deployment done with this job.
   slack_channel_name:
     type: string
-    default: dps-releases
+    default: "dps-releases"
     description: Slack channel to use for deployment notifications.
   helm_additional_args:
     type: string
@@ -106,9 +106,26 @@ steps:
   - when:
       condition: <<parameters.slack_notification>>
       steps:
+        - run:
+            name: Slack channels to notify
+            command: |
+              # For prod releases only always notify central dps-releases channel in addition to custom team channels.
+              if [[ "<< parameters.env >>" == "prod" || "<< parameters.env >>" == "production" ]]; then
+                # By default send to channel ID CVA3MKDTR = #dps-releases
+                if [[ "<< parameters.slack_channel_name >>" == "CVA3MKDTR" || "<< parameters.slack_channel_name >>" == "dps-releases" ]]; then
+                  NOTIFY_SLACK_CHANNELS="CVA3MKDTR"
+                else
+                  # Also send to custom team channel
+                  NOTIFY_SLACK_CHANNELS="CVA3MKDTR,<< parameters.slack_channel_name >>"
+                fi
+              else
+                # non prod envs, send to custom team channel.
+                NOTIFY_SLACK_CHANNELS="<< parameters.slack_channel_name >>"
+              fi
+              echo "export NOTIFY_SLACK_CHANNELS=$NOTIFY_SLACK_CHANNELS" >> $BASH_ENV
         - slack/notify:
             event: always
-            channel: << parameters.slack_channel_name >>
+            channel: ${NOTIFY_SLACK_CHANNELS}
             custom: |
               {
                 "blocks": [
