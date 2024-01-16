@@ -91,7 +91,7 @@ steps:
               echo "export DEPLOYMENT_CHANGELOG_JSON=$(echo -n "$DEPLOYMENT_CHANGELOG" | tr '"' "'" | tr "\`" "'" | jq -Rs)" >> $BASH_ENV
   - mem/recall:
       env_var: APP_VERSION
-  - deploy:
+  - run:
       name: Deploy to << parameters.env >>
       working_directory: << parameters.helm_dir >>
       environment:
