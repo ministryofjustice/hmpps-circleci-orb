@@ -27,6 +27,7 @@ if git rev-parse --quiet --verify "${previous_commit}" &>/dev/null; then
     --pretty=format:'%h %s (%cr)' --committer='noreply@github.com' --grep='#' \
     "${previous_commit}..${current_commit}" \
     | sed 's/Merge pull request /PR /g; s|from ministryofjustice/dependabot/|:dependabot:|g; s|from ministryofjustice/||g' \
+    | tr '"' "'" | tr "\`" "'" \
     >> .deployment_changelog
 else
   echo "Changelog not available." > .deployment_changelog
