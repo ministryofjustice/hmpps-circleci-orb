@@ -58,6 +58,7 @@ steps:
       key: trivy_cache_<< parameters.cache_key >>
       paths:
         - .trivy
+        
   - run:
       when: always
       name: Get Trivy results in json format
