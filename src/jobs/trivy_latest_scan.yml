@@ -57,8 +57,7 @@ steps:
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
       paths:
-        - .trivy
-  
+        - .trivy  
   - run:
       when: always
       name: Get Trivy results in json format
@@ -76,8 +75,7 @@ steps:
           --format json \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - store_artifacts:
-      path: results.json                   
-                    
+      path: results.json
   - run:
       when: on_fail
       name: Get Trivy results formatted for slack
