@@ -59,6 +59,24 @@ steps:
       paths:
         - .trivy
   - run:
+      when: always
+      name: Get Trivy results in json format
+      command: |
+        /tmp/trivy \
+          --cache-dir .trivy \
+          image \
+          --exit-code 100 \
+          --no-progress \
+          --severity << parameters.cve_severities_to_check >> \
+          --ignore-unfixed \
+          --skip-dirs /usr/local/lib/node_modules/npm \
+          --skip-files /app/agent.jar \
+          --output results.json \
+          --format json \
+          << parameters.additional_args >> "<< parameters.image_name >>:latest"
+  - store_artifacts:
+      path: results.json
+  - run:
       when: on_fail
       name: Get Trivy results formatted for slack
       command: |
