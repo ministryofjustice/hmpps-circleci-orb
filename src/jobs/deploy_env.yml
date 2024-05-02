@@ -40,6 +40,10 @@ parameters:
     type: boolean
     default: true
     description: When true, displays what is new since the previous deployment in the job, and in Slack, if applicable
+  changelog_git_paths:
+    type: string
+    default: ""
+    description: When set it will limit the file changes shown in the changelog to the specified paths only. This is useful for multi-project builds where otherwise it will show all changes from all projects.
   k8s_deployment_name:
     type: string
     default: PROJECT_NAME
@@ -83,6 +87,7 @@ steps:
             name: Show changes about to be released on << parameters.env >>
             environment:
               K8S_DEPLOYMENT_NAME: << parameters.k8s_deployment_name >>
+              CHANGELOG_GIT_PATHS: << parameters.changelog_git_paths >>
             command: <<include(scripts/version_history.sh)>>
         - run:
             name: Store deployment changelog
