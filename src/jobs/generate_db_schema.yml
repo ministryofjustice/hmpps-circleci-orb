@@ -2,8 +2,8 @@
 description: >
   Job to generate a schema report for a database, using schemaspy.
 executor:
-  name: default
-  tag: "3.10"
+  name: java
+  tag: "21.0"
 parameters:
   host:
     type: string
@@ -28,27 +28,28 @@ parameters:
     type: string
     default: dev
     description: Database password.
-  output:
-    type: string
-    default: /schemaspy
-    description: Output directory.
 steps:
   - checkout
   - run:
       name: Install schemaspy
       command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar --output /tmp/schemaspy.jar
   - run:
+      name: Install postgres jdbc driver
+      command: curl -L https://jdbc.postgresql.org/download/postgresql-42.7.3.jar --output /tmp/postgres-driver.jar
+  - run:
       name: Generate database schema report
       command: |
         java -jar /tmp/schemaspy.jar \
           -t pgsql \
+          -dp /tmp/postgres-driver.jar \
           -db << parameters.database >> \
           -host << parameters.host >> \
           -port << parameters.port >> \
           -s << parameters.schema >> \
+          -vizjs \
           -u << parameters.user >> \
           -p << parameters.password >> \
-          -o << parameters.output >>
+          -o /tmp/schemaspy
   - store_artifacts:
-      path: /schemaspy/output
+      path: /tmp/schemaspy
       destination: schema
