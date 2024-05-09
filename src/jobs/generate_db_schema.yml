@@ -11,7 +11,7 @@ parameters:
     description: Host name of the database.
   port:
     type: string
-    default: 5432
+    default: "5432"
     description: Port number of the database.
   database:
     type: string
