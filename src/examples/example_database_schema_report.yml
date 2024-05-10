@@ -6,20 +6,20 @@ usage:
   orbs:
     hmpps: ministryofjustice/hmpps@8
 
-  jobs: 
+  jobs:
     initialise_db_schema:
       executor:
         name: hmpps/java_localstack_postgres
       steps:
-          - checkout
-          - run:
-              # Run any task to initialise the database schema. 
-              # e.g. a spring integration test that initializes the application context 
-              # and runs flyway scripts.
-              # This will allow schemaspy to build the report
-              name: Initialise database
-              command: ./gradlew build  
-              
+        - checkout
+        - run:
+          # Run any task to initialise the database schema.
+          # e.g. a spring integration test to initialise the application context
+          # and run flyway scripts.
+          # This will allow schemaspy to build the report
+          name: Initialise database
+          command: ./gradlew build
+
   workflows:
     generate-schema:
       jobs:
