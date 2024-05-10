@@ -13,12 +13,12 @@ usage:
       steps:
         - checkout
         - run:
-          # Run any task to initialise the database schema.
-          # e.g. a spring integration test to initialise the application context
-          # and run flyway scripts.
-          # This will allow schemaspy to build the report
-          name: Initialise database
-          command: ./gradlew build
+            # Run any task to initialise the database schema.
+            # e.g. a spring integration test to initialise the application context
+            # and run flyway scripts.
+            # This will allow schemaspy to build the report
+            name: Initialise database
+            command: ./gradlew build
 
   workflows:
     generate-schema:
