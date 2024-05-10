@@ -1,6 +1,6 @@
 ---
 description: >
-  Job to generate a schema report for a database, using schemaspy.
+  Job to generate a schema report for a postgres database, using schemaspy. Runs against postgres in docker
 executor:
   name: java
   tag: "21.0"
@@ -8,28 +8,23 @@ parameters:
   host:
     type: string
     default: localhost
-    description: Host name of the database.
+    description: Host name of the database
   port:
     type: string
     default: "5432"
-    description: Port number of the database.
-  database:
-    type: string
-    default: postgres
-    description: Database type e.g. postgres
+    description: Port number of the database
   schema:
     type: string
-    description: Schema name.
+    description: Schema name
   user:
     type: string
     default: root
-    description: Database user name.
+    description: Database user name
   password:
     type: string
     default: dev
-    description: Database password.
+    description: Database password
 steps:
-  - checkout
   - run:
       name: Install schemaspy
       command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar --output /tmp/schemaspy.jar
@@ -42,7 +37,7 @@ steps:
         java -jar /tmp/schemaspy.jar \
           -t pgsql \
           -dp /tmp/postgres-driver.jar \
-          -db << parameters.database >> \
+          -db postgres \
           -host << parameters.host >> \
           -port << parameters.port >> \
           -s << parameters.schema >> \

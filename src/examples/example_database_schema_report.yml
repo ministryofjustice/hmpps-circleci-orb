@@ -1,0 +1,26 @@
+---
+description: >
+  Example of how to run the hmpps/database_schema_report job
+usage:
+  version: 2.1
+  orbs:
+    hmpps: ministryofjustice/hmpps@8
+
+  jobs: 
+    initialise_db_schema:
+      steps:
+          - checkout
+          - run:
+              # Run any task to initialise the database schema. 
+              # e.g. a spring integration test that initializes the application context 
+              # and runs flyway scripts.
+              # This will allow schemaspy to build the report
+              name: Initialise database
+              command: ./gradlew build  
+              
+  workflows:
+    generate-schema:
+      jobs:
+        - initialise_db_schema
+        - hmpps/database_schema_report:
+            schema: example_schema
