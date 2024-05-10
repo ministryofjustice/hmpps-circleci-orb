@@ -8,6 +8,8 @@ usage:
 
   jobs: 
     initialise_db_schema:
+      executor:
+        name: hmpps/java_localstack_postgres
       steps:
           - checkout
           - run:
