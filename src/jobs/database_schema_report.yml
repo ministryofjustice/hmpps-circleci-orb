@@ -1,6 +1,6 @@
 ---
 description: >
-  Job to generate a schema report for a postgres database, using schemaspy. Runs against postgres in docker
+  Job to generate a schema report for a postgres database using schemaspy. Runs against postgres in docker
   An HTML report is generated and is available on the artifacts tab of the circleci job
 executor:
   name: java_localstack_postgres
