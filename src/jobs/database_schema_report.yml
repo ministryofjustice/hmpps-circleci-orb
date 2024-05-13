@@ -44,7 +44,6 @@ parameters:
     default: "42.7.3"
     description: Postgres driver version
 
-
 steps:
   - checkout
   - run:
