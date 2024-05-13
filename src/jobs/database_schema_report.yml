@@ -35,15 +35,24 @@ parameters:
     type: string
     default: "dev"
     description: Database password
+  schemaspy_version:
+    type: string
+    default: "6.2.4"
+    description: schemaspy version
+  postgres_driver_version:
+    type: string
+    default: "42.7.3"
+    description: Posgres driver version
+
 
 steps:
   - checkout
   - run:
       name: Install schemaspy
-      command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-6.2.4.jar --output /tmp/schemaspy.jar
+      command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-<< parameters.schemaspy_version >>.jar --output /tmp/schemaspy.jar
   - run:
       name: Install postgres jdbc driver
-      command: curl -L https://jdbc.postgresql.org/download/postgresql-42.7.3.jar --output /tmp/postgres-driver.jar
+      command: curl -L https://jdbc.postgresql.org/download/postgresql-<< parameters.postgres_driver_version >>.jar --output /tmp/postgres-driver.jar
   - run:
       name: Execute a command to initialise the database schema
       command: << parameters.initialise_database >>
