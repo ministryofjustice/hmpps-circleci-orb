@@ -26,6 +26,7 @@ parameters:
     description: Port number of the database
   schema:
     type: string
+    default: "public"
     description: Schema name
   user:
     type: string
