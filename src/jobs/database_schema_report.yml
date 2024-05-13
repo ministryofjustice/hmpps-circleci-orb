@@ -42,7 +42,7 @@ parameters:
   postgres_driver_version:
     type: string
     default: "42.7.3"
-    description: Posgres driver version
+    description: Postgres driver version
 
 
 steps:
