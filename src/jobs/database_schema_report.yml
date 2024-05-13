@@ -49,7 +49,7 @@ steps:
   - checkout
   - run:
       name: Install schemaspy
-      command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v6.2.4/schemaspy-<< parameters.schemaspy_version >>.jar --output /tmp/schemaspy.jar
+      command: curl -L https://github.com/schemaspy/schemaspy/releases/download/v<< parameters.schemaspy_version >>/schemaspy-<< parameters.schemaspy_version >>.jar --output /tmp/schemaspy.jar
   - run:
       name: Install postgres jdbc driver
       command: curl -L https://jdbc.postgresql.org/download/postgresql-<< parameters.postgres_driver_version >>.jar --output /tmp/postgres-driver.jar
