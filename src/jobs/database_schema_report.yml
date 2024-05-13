@@ -11,7 +11,7 @@ parameters:
   initialise_database:
     type: string
     default: "./gradlew check"
-    description: A command which will initialise the database schema
+    description: A command which will initialise the database schema.
   database_name:
     type: string
     default: "postgres"
