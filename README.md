@@ -45,10 +45,13 @@ To see the slack apps configuration go here <https://api.slack.com/apps/> and fi
 
 We welcome [issues](https://github.com/ministryofjustice/hmpps-circleci-orb/issues) to and [pull requests](https://github.com/ministryofjustice/hmpps-circleci-orb/pulls) against this repository!
 
-To publish a new production version:
-* Create a PR to the `Alpha` branch with your changes. This will act as a "staging" branch.
+#### Testing your changes
+
+You can define an inline orb in your project's circleci config. [Documentation](https://circleci.com/docs/reusing-config/#writing-inline-orbs) here and a [working example here](https://app.circleci.com/projects/github/ministryofjustice/hmpps-person-record/config/?branchName=CPR-330&pipelineNumber=1772) 
+
+#### Publish a new production version:
 * Consider adding to the release notes. Especially for breaking changes.
-* When ready to publish a new production version, create a PR from `Alpha` to `master`. The Git Subject (commit message of the most recent commit - `git log -1 --pretty=%s.`) should include `[semver:patch|minor|release|skip]` to indicate the type of release.
+* When ready to publish a new production version, create a PR. The Git Subject (commit message of the most recent commit - `git log -1 --pretty=%s.`) should include `[semver:patch|minor|release|skip]` to indicate the type of release.
 * On merge, the release will be published to the orb registry automatically.
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
