@@ -39,7 +39,7 @@ parameters:
   schemaspy_version:
     type: string
     default: "6.2.4"
-    description: schemaspy version
+    description: Schemaspy version
   postgres_driver_version:
     type: string
     default: "42.7.3"
