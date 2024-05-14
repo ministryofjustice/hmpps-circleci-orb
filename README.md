@@ -51,7 +51,7 @@ You can define an inline orb in your project's circleci config. [Documentation](
 
 #### Publish a new production version:
 * Consider adding to the release notes. Especially for breaking changes.
-* When ready to publish a new production version, create a PR. The Git Subject (commit message of the most recent commit - `git log -1 --pretty=%s.`) should include `[semver:patch|minor|release|skip]` to indicate the type of release.
+* When ready to publish a new production version, create a PR. The Pull Request title must include `[semver:patch|minor|release|skip]` to indicate the type of release [as in this example](https://github.com/ministryofjustice/hmpps-circleci-orb/pull/178)
 * On merge, the release will be published to the orb registry automatically.
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
