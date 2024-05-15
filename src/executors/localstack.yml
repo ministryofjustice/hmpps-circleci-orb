@@ -6,12 +6,9 @@ docker:
       - SERVICES=<<parameters.services>>
       - ES_PORT_EXTERNAL=4571
       - DEBUG=${DEBUG- }
-      - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
       - AWS_EXECUTION_ENV=True
-      - DEFAULT_REGION=eu-west-2
-      - TMPDIR=/private
+      - PERSISTENCE=1
 environment:
   _JAVA_OPTIONS: <<parameters.java_options>>
 working_directory: ~/app

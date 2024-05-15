@@ -6,12 +6,9 @@ docker:
       - SERVICES=<<parameters.services>>
       - ES_PORT_EXTERNAL=4571
       - DEBUG=${DEBUG- }
-      - DATA_DIR=/tmp/localstack/data
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
       - AWS_EXECUTION_ENV=True
-      - DEFAULT_REGION=eu-west-2
-      - TMPDIR=/private
+      - PERSISTENCE=1
   - image: postgres:<< parameters.postgres_tag >>
     environment:
       - POSTGRES_PASSWORD=<< parameters.postgres_password >>
