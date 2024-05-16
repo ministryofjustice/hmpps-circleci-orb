@@ -70,6 +70,13 @@ steps:
           -u << parameters.user >> \
           -p << parameters.password >> \
           -o /tmp/schemaspy
+  - run:
+      name: generate index file
+      command: |
+        echo '<html><head><meta http-equiv="refresh" content="0; url=report/index.html" /></head><body><a href="report/index.html">Open Schema Report</a></body></html>' > /tmp/index.html
+  - store_artifacts:
+      path: /tmp/index.html
+      destination: schema/index.html
   - store_artifacts:
       path: /tmp/schemaspy
-      destination: schema
+      destination: schema/report
