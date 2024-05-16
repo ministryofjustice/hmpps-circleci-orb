@@ -50,7 +50,7 @@ We welcome [issues](https://github.com/ministryofjustice/hmpps-circleci-orb/issu
 
 You can define an inline orb in your project's circleci config. [Documentation](https://circleci.com/docs/reusing-config/#writing-inline-orbs) here and a [working example here](https://app.circleci.com/projects/github/ministryofjustice/hmpps-person-record/config/?branchName=CPR-330&pipelineNumber=1772) 
 
-#### Publish a new production version:
+#### Publish a new release:
 * Consider adding to the release notes. Especially for breaking changes.
 * When ready to publish a new production version, create a PR. The most recent commit must include `[semver:patch|minor|release|skip]` to indicate the type of release [as in this example](https://github.com/ministryofjustice/hmpps-circleci-orb/pull/178)
 * On merge, the release will be published to the orb registry automatically.
