@@ -37,8 +37,9 @@ steps:
       name: "Upload to Veracode"
       command: |
         # Randomly pick 1 of 5 api keys, to help avoid veracode API rate limits.
-        VERACODE_API_ID_X="VERACODE_API_ID_$(( RANDOM % 4 ))"
-        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( RANDOM % 4 ))"
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
         echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar VeracodeJavaAPI.jar \
         -vid "${!VERACODE_API_ID_X}" \

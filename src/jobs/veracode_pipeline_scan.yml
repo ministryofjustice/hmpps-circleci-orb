@@ -36,8 +36,9 @@ steps:
       no_output_timeout: 1m
       command: |
         # Randomly pick 1 of 5 api keys, to help avoid veracode API rate limits.
-        VERACODE_API_ID_X="VERACODE_API_ID_$(( RANDOM % 4 ))"
-        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( RANDOM % 4 ))"
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
         echo "Using ${VERACODE_API_ID_X} from pool."src/jobs/veracode_policy_scan.yml
         java -jar pipeline-scan.jar \
         --request_policy "Ministry of Justice" \
@@ -48,8 +49,9 @@ steps:
       no_output_timeout: 30m
       command: |
         # Randomly pick 1 of 5 api keys, to help avoid veracode API rate limits.
-        VERACODE_API_ID_X="VERACODE_API_ID_$(( RANDOM % 4 ))"
-        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( RANDOM % 4 ))"
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
         echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar pipeline-scan.jar \
           $(test -f results.json && echo "--baseline_file results.json") \
