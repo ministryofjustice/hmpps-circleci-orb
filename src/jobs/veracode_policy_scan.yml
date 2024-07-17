@@ -36,9 +36,12 @@ steps:
   - run:
       name: "Upload to Veracode"
       command: |
+        # Randomly pick 1 of 4 api keys, to help avoid veracode API rate limits.
+        VERACODE_API_ID_X="VERACODE_API_ID_$(( ( RANDOM % 4 )  + 1 ))"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( ( RANDOM % 4 )  + 1 ))"
         java -jar VeracodeJavaAPI.jar \
-        -vid "${VERACODE_API_ID}" \
-        -vkey "${VERACODE_API_KEY}" \
+        -vid "${!VERACODE_API_ID_X}" \
+        -vkey "${!VERACODE_API_KEY_X}" \
         -teams "<< parameters.teams >>" \
         -action UploadAndScan \
         -appname ${CIRCLE_PROJECT_REPONAME} \

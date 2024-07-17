@@ -35,21 +35,27 @@ steps:
       name: Download Veracode Policy
       no_output_timeout: 1m
       command: |
+        # Randomly pick 1 of 4 api keys, to help avoid veracode API rate limits.
+        VERACODE_API_ID_X="VERACODE_API_ID_$(( ( RANDOM % 4 )  + 1 ))"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( ( RANDOM % 4 )  + 1 ))"
         java -jar pipeline-scan.jar \
         --request_policy "Ministry of Justice" \
-        --veracode_api_id "${VERACODE_API_ID}" \
-        --veracode_api_key "${VERACODE_API_KEY}"
+        --veracode_api_id "${!VERACODE_API_ID_X}" \
+        --veracode_api_key "${!VERACODE_API_KEY_X}"
   - run:
       name: Scan Project
       no_output_timeout: 30m
       command: |
+        # Randomly pick 1 of 4 api keys, to help avoid veracode API rate limits.
+        VERACODE_API_ID_X="VERACODE_API_ID_$(( ( RANDOM % 4 )  + 1 ))"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$(( ( RANDOM % 4 )  + 1 ))"
         java -jar pipeline-scan.jar \
           $(test -f results.json && echo "--baseline_file results.json") \
           --json_output true \
           --file source.zip \
           --policy_file Ministry_of_Justice.json \
-          --veracode_api_id "${VERACODE_API_ID}" \
-          --veracode_api_key "${VERACODE_API_KEY}" \
+          --veracode_api_id "${!VERACODE_API_ID_X}" \
+          --veracode_api_key "$!VERACODE_API_KEY_X}" \
           --timeout 60 \
           --issue_details false \
           --summary_output true
