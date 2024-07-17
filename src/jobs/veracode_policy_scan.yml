@@ -34,11 +34,13 @@ steps:
       command: |
         wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/22.9.10.3/vosp-api-wrappers-java-22.9.10.3.jar -O VeracodeJavaAPI.jar
   - run:
-      name: Setup Veracode credentials
-      command: <<include(scripts/veracode_creds.sh)>>
-  - run:
       name: "Upload to Veracode"
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar VeracodeJavaAPI.jar \
         -vid "${!VERACODE_API_ID_X}" \
         -vkey "${!VERACODE_API_KEY_X}" \

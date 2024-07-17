@@ -32,12 +32,14 @@ steps:
       keys:
         - veracode-baseline-results-{{ .Branch }}
   - run:
-      name: Setup Veracode credentials
-      command: <<include(scripts/veracode_creds.sh)>>
-  - run:
       name: Download Veracode Policy
       no_output_timeout: 1m
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar pipeline-scan.jar \
         --request_policy "Ministry of Justice" \
         --veracode_api_id "${!VERACODE_API_ID_X}" \
@@ -46,6 +48,11 @@ steps:
       name: Scan Project
       no_output_timeout: 30m
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar pipeline-scan.jar \
           $(test -f results.json && echo "--baseline_file results.json") \
           --json_output true \
