@@ -34,9 +34,11 @@ steps:
       command: |
         wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/22.9.10.3/vosp-api-wrappers-java-22.9.10.3.jar -O VeracodeJavaAPI.jar
   - run:
+      name: Setup Veracode credentials
+      command: <<include(scripts/veracode_creds.sh)>>
+  - run:
       name: "Upload to Veracode"
       command: |
-        <<include(scripts/veracode_creds.sh)>>src/jobs/veracode_policy_scan.yml 
         java -jar VeracodeJavaAPI.jar \
         -vid "${!VERACODE_API_ID_X}" \
         -vkey "${!VERACODE_API_KEY_X}" \
