@@ -26,6 +26,7 @@ parameters:
 steps:
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
+      additional_docker_build_args: << parameters.additional_docker_build_args >>
   - run:
       name: Download/Extract-Veracode-Pipeline-Scanner
       command: |
