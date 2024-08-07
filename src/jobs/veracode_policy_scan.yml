@@ -20,6 +20,9 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
+  additional_docker_build_args:
+    type: string
+    default: ""
   jdk_tag:
     default: "17.0"
     type: string
