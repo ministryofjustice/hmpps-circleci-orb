@@ -3,7 +3,8 @@ description: >
   Veracode SAST pipeline scan
 executor:
   name: java
-  tag: "17.0"
+  tag: <<parameters.jdk_tag>>
+  java_options: <<parameters.java_options>>
 parameters:
   slack_channel:
     type: string
@@ -13,9 +14,19 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
+  additional_docker_build_args:
+    type: string
+    default: ""
+  jdk_tag:
+    default: "17.0"
+    type: string
+  java_options:
+    default: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
+    type: string
 steps:
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
+      additional_docker_build_args: << parameters.additional_docker_build_args >>
   - run:
       name: Download/Extract-Veracode-Pipeline-Scanner
       command: |
@@ -28,21 +39,31 @@ steps:
       name: Download Veracode Policy
       no_output_timeout: 1m
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar pipeline-scan.jar \
         --request_policy "Ministry of Justice" \
-        --veracode_api_id "${VERACODE_API_ID}" \
-        --veracode_api_key "${VERACODE_API_KEY}"
+        --veracode_api_id "${!VERACODE_API_ID_X}" \
+        --veracode_api_key "${!VERACODE_API_KEY_X}"
   - run:
       name: Scan Project
       no_output_timeout: 30m
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar pipeline-scan.jar \
           $(test -f results.json && echo "--baseline_file results.json") \
           --json_output true \
           --file source.zip \
           --policy_file Ministry_of_Justice.json \
-          --veracode_api_id "${VERACODE_API_ID}" \
-          --veracode_api_key "${VERACODE_API_KEY}" \
+          --veracode_api_id "${!VERACODE_API_ID_X}" \
+          --veracode_api_key "${!VERACODE_API_KEY_X}" \
           --timeout 60 \
           --issue_details false \
           --summary_output true

@@ -3,7 +3,8 @@ description: >
   Veracode SAST policy scan
 executor:
   name: java
-  tag: "17.0"
+  tag: <<parameters.jdk_tag>>
+  java_options: <<parameters.java_options>>
 parameters:
   slack_channel:
     type: string
@@ -19,9 +20,19 @@ parameters:
     description: Directory inside the docker image where the application artifacts are saved
     type: string
     default: "/app"
+  additional_docker_build_args:
+    type: string
+    default: ""
+  jdk_tag:
+    default: "17.0"
+    type: string
+  java_options:
+    default: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process
+    type: string
 steps:
   - veracode_prepare_artifacts:
       docker_image_app_dir: << parameters.docker_image_app_dir >>
+      additional_docker_build_args: << parameters.additional_docker_build_args >>
   - run:
       name: "Download/Extract veracode agent"
       command: |
@@ -29,9 +40,14 @@ steps:
   - run:
       name: "Upload to Veracode"
       command: |
+        echo "Randomly picking 1 of 5 api keys, to help avoid veracode API rate limits."
+        X=$(( RANDOM % 4 ))
+        VERACODE_API_ID_X="VERACODE_API_ID_$X"
+        VERACODE_API_KEY_X="VERACODE_API_KEY_$X"
+        echo "Using ${VERACODE_API_ID_X} from pool."
         java -jar VeracodeJavaAPI.jar \
-        -vid "${VERACODE_API_ID}" \
-        -vkey "${VERACODE_API_KEY}" \
+        -vid "${!VERACODE_API_ID_X}" \
+        -vkey "${!VERACODE_API_KEY_X}" \
         -teams "<< parameters.teams >>" \
         -action UploadAndScan \
         -appname ${CIRCLE_PROJECT_REPONAME} \
