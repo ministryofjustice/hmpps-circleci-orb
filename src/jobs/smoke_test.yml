@@ -36,3 +36,4 @@ steps:
       path: build/test-results
   - store_artifacts:
       path: build/reports/tests
+circleci_ip_ranges: true
