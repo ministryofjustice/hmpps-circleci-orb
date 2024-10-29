@@ -53,6 +53,7 @@ steps:
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
           --skip-files /app/agent.jar \
+          --db-repository "ghcr.io/aquasecurity/trivy-db:2","public.ecr.aws/aquasecurity/trivy-db" \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
@@ -73,6 +74,7 @@ steps:
           --skip-files /app/agent.jar \
           --output results.json \
           --format json \
+          --db-repository "ghcr.io/aquasecurity/trivy-db:2","public.ecr.aws/aquasecurity/trivy-db" \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - store_artifacts:
       path: results.json
@@ -92,6 +94,7 @@ steps:
           --output results.txt \
           --format template \
           --template '<< parameters.trivy_template >>' \
+          --db-repository "ghcr.io/aquasecurity/trivy-db:2","public.ecr.aws/aquasecurity/trivy-db" \
           << parameters.additional_args >> "<< parameters.image_name >>:latest"
   - slack_message_results:
       file: results.txt

@@ -46,6 +46,7 @@ steps:
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
           --skip-files /app/agent.jar \
+          --db-repository "ghcr.io/aquasecurity/trivy-db:2","public.ecr.aws/aquasecurity/trivy-db" \
           << parameters.additional_args >> "${IMAGE_NAME}:${APP_VERSION}"
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
