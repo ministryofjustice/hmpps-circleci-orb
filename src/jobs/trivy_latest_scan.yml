@@ -34,7 +34,7 @@ parameters:
   db_repo_2:
     type: string
     default: "public.ecr.aws/aquasecurity/trivy-db"
-    description: "Database repository for vulnerability database - main"
+    description: "Database repository for vulnerability database - backup"
   slack_channel:
     type: string
     default: dps_alerts_security
