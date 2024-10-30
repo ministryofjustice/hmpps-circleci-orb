@@ -21,6 +21,14 @@ parameters:
     type: string
     default: v1
     description: Cache key for the vulnerability database - change to break the cache.
+  db_repo_1:
+    type: string
+    default: "ghcr.io/aquasecurity/trivy-db:2"
+    description: "Database repository for vulnerability database - main"
+  db_repo_2:
+    type: string
+    default: "public.ecr.aws/aquasecurity/trivy-db"
+    description: "Database repository for vulnerability database - backup"
 steps:
   - checkout
   - setup_remote_docker
@@ -46,6 +54,7 @@ steps:
           --ignore-unfixed \
           --skip-dirs /usr/local/lib/node_modules/npm \
           --skip-files /app/agent.jar \
+          --db-repository "<< parameters.db_repo_1 >>","<< parameters.db_repo_2 >>" \
           << parameters.additional_args >> "${IMAGE_NAME}:${APP_VERSION}"
   - save_cache:
       key: trivy_cache_<< parameters.cache_key >>
