@@ -4,7 +4,7 @@ description: >
 
   This is intended to be a scheduled job that runs maybe daily and can
   alert teams to new found issues on running applications that might not
-  be in active development.
+  be in active development. Uses the latest Docker Trivy image.
 executor:
   name: default
   tag: "3.10"
