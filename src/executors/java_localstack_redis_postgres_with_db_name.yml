@@ -1,0 +1,51 @@
+---
+docker:
+  - image: cimg/openjdk:<<parameters.jdk_tag>>
+  - image: cimg/redis::<<parameters.redis_tag>>
+    environment:
+      - ALLOW_EMPTY_PASSWORD=<<parameters.redis_password>>
+  - image: localstack/<<parameters.localstack_type>>:<<parameters.localstack_tag>>
+    environment:
+      - SERVICES=<<parameters.services>>
+      - ES_PORT_EXTERNAL=4571
+      - DEBUG=${DEBUG- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_EXECUTION_ENV=True
+      - PERSISTENCE=1
+  - image: postgres:<< parameters.postgres_tag >>
+    environment:
+      - POSTGRES_PASSWORD=<< parameters.postgres_password >>
+      - POSTGRES_USER=<< parameters.postgres_username >>
+      - POSTGRES_DB=<< parameters.postgres_db >>
+environment:
+  _JAVA_OPTIONS: <<parameters.java_options>>
+working_directory: ~/app
+resource_class: <<parameters.resource_class>>
+parameters:
+  resource_class:
+    default: medium
+    type: string
+  jdk_tag:
+    type: string
+  localstack_tag:
+    type: string
+  localstack_type:
+    default: "localstack"
+    type: string
+  services:
+    default: "sqs,sns"
+    type: string
+  postgres_tag:
+    type: string
+  postgres_password:
+    default: "dev"
+    type: string
+  postgres_username:
+    default: "root"
+    type: string
+  postgres_db:
+    default: "postgres"
+    type: string
+  java_options:
+    default: -Xmx512m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
+    type: string
