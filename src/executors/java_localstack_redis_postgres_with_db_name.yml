@@ -1,7 +1,7 @@
 ---
 docker:
   - image: cimg/openjdk:<<parameters.jdk_tag>>
-  - image: cimg/redis::<<parameters.redis_tag>>
+  - image: cimg/redis:<<parameters.redis_tag>>
     environment:
       - ALLOW_EMPTY_PASSWORD=<<parameters.redis_allow_empty_password>>
   - image: localstack/<<parameters.localstack_type>>:<<parameters.localstack_tag>>
