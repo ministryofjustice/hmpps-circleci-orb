@@ -3,7 +3,7 @@ docker:
   - image: cimg/openjdk:<<parameters.jdk_tag>>
   - image: cimg/redis::<<parameters.redis_tag>>
     environment:
-      - ALLOW_EMPTY_PASSWORD=<<parameters.redis_password>>
+      - ALLOW_EMPTY_PASSWORD=<<parameters.redis_allow_empty_password>>
   - image: localstack/<<parameters.localstack_type>>:<<parameters.localstack_tag>>
     environment:
       - SERVICES=<<parameters.services>>
@@ -49,3 +49,9 @@ parameters:
   java_options:
     default: -Xmx512m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
     type: string
+  redis_allow_empty_password:
+    default: "yes"
+    type: string
+  redis_tag:
+    type: string
+
