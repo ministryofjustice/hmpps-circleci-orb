@@ -2,12 +2,16 @@
 description: >
   Job to generate a schema report for a postgres database using schemaspy. Runs against postgres in docker
   An HTML report is generated and is available on the artifacts tab of the circleci job
-executor:
-  name: java_localstack_postgres
-  jdk_tag: "21.0"
-  localstack_tag: "3.0"
-  postgres_tag: "16.1"
 parameters:
+  jdk_tag:
+    type: string
+    default: "21.0"
+  localstack_tag:
+    type: string
+    default: "3.0"
+  postgres_tag:
+    type: string
+    default: "16.1"
   initialise_database:
     type: string
     default: "./gradlew check"
@@ -21,8 +25,8 @@ parameters:
     default: "localhost"
     description: Host name of the database
   port:
-    type: string
-    default: "5432"
+    type: integer
+    default: 5432
     description: Port number of the database
   schema:
     type: string
@@ -44,6 +48,16 @@ parameters:
     type: string
     default: "42.7.3"
     description: Postgres driver version
+
+executor:
+  name: java_localstack_postgres_with_db_name
+  jdk_tag: << parameters.jdk_tag >>
+  localstack_tag: << parameters.localstack_tag >>
+  postgres_tag: << parameters.postgres_tag >>
+  postgres_db: << parameters.database_name >>
+  postgres_username: << parameters.user >>
+  postgres_password: << parameters.password >>
+  postgres_port: << parameters.port >>
 
 steps:
   - checkout

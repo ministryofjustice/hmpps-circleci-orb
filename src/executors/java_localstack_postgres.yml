@@ -13,6 +13,7 @@ docker:
     environment:
       - POSTGRES_PASSWORD=<< parameters.postgres_password >>
       - POSTGRES_USER=<< parameters.postgres_username >>
+      - PGPORT=<< parameters.postgres_port >>
 environment:
   _JAVA_OPTIONS: <<parameters.java_options>>
 working_directory: ~/app
@@ -39,6 +40,9 @@ parameters:
   postgres_username:
     default: "root"
     type: string
+  postgres_port:
+    default: 5432
+    type: integer
   java_options:
     default: -Xmx512m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dkotlin.compiler.execution.strategy=in-process -Dorg.gradle.workers.max=1
     type: string
