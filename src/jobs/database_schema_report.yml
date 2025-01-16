@@ -87,7 +87,7 @@ steps:
           -vizjs \
           -u << parameters.user >> \
           -p << parameters.password >> \
-          -o /tmp/schemaspy
+          -o /tmp/schemaspy \
           -I << parameters.excludeTables >>
   - run:
       name: generate index file
