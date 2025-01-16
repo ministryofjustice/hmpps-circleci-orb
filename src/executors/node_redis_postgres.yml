@@ -9,6 +9,7 @@ docker:
       - POSTGRES_PASSWORD=<< parameters.postgres_password >>
       - POSTGRES_USER=<< parameters.postgres_username >>
       - POSTGRES_DB=<< parameters.postgres_db >>
+      - PGPORT=<< parameters.postgres_port >>
 working_directory: ~/app
 resource_class: <<parameters.resource_class>>
 parameters:
@@ -30,3 +31,6 @@ parameters:
   postgres_db:
     default: "postgres"
     type: string
+  postgres_port:
+    default: 5432
+    type: integer
