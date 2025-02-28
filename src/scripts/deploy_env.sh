@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 if [[ ${RELEASE_NAME} == "PROJECT_NAME_ENV_NAME" ]]; then
