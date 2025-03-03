@@ -26,7 +26,8 @@ HELM_ARGS=(--wait \
   --reset-values \
   --timeout "${HELM_TIMEOUT}" \
   --history-max 10 \
-  --values "values-${ENV_NAME}.yaml")
+  --values "values-${ENV_NAME}.yaml" \
+  --set "global.environment=${ENV_NAME}")
 
 # See https://github.com/ministryofjustice/hmpps-ip-allowlists
 if [[ -n ${IP_ALLOWLIST_GROUPS_YAML} ]]; then
