@@ -8,6 +8,7 @@ Example use-cases are provided on the orb [registry page](https://circleci.com/o
 
 ## Release Notes
 
+##### [11.x](release-notes/11.x.md)
 ##### [10.x](release-notes/10.x.md)
 ##### [9.x](release-notes/9.x.md)
 ##### [8.x](release-notes/8.x.md)
