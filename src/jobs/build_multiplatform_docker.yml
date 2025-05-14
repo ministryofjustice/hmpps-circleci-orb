@@ -8,6 +8,15 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+  container_registry_server:
+    description: >
+      The repository to push the image to. This should be the same as the image_name
+      but without the image name. For example, if the image_name is
+      quay.io/hmpps/my-app, then the container_registry_server should be quay.io.
+      Alternatively, you can set this to a different repository if you want to push
+      the image to a different location. e.g. docker.io
+    type: string
+    default: "quay.io"
   dockerfile_dir:
     type: string
     default: "."
@@ -77,8 +86,15 @@ steps:
         docker run --rm --privileged tonistiigi/binfmt --install all
         docker buildx create --use multi-arch-build --platform linux/arm64,linux/amd64 --name="${CIRCLE_PROJECT_REPONAME}"
   - run:
-      name: quay.io login
-      command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+      name: Docker login
+      command: |
+        if [[ << parameters.container_registry_server >> != "quay.io" ]]; then
+          echo "Logging into << parameters.container_registry_server >>"
+          docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" << parameters.container_registry_server >>
+        else
+          echo "Logging into quay.io"
+          docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+        fi
   - run:
       name: Build and publish container image
       no_output_timeout: << parameters.no_output_timeout >>

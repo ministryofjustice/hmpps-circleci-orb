@@ -8,6 +8,14 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+  container_registry_server:
+    description: >
+      The registry server to push the image to. This should be the same as the image_name
+      but without the image name. For example, if the image_name is
+      quay.io/hmpps/my-app, then the container_registry_server should be quay.io.
+      Alternatively this value might be, e.g. docker.io or ghcr.io.
+    type: string
+    default: "quay.io"
   dockerfile_dir:
     type: string
     default: "."
@@ -130,8 +138,13 @@ steps:
         - run:
             name: Publish image to repository
             command: |
-              #push to quay.io
-              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+              if [[ << parameters.container_registry_server >> != "quay.io" ]]; then
+                echo "Logging into << parameters.container_registry_server >>"
+                docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" << parameters.container_registry_server >>
+              else
+                echo "Logging into quay.io"
+                docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+              fi
               docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
