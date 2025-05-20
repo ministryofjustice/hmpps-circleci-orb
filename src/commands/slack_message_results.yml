@@ -20,7 +20,7 @@ steps:
         if [[ -f << parameters.file >> ]]; then
           echo "Processing file: << parameters.file >>"
           echo "Exporting to env var: << parameters.env_var >>"
-          SLACK_TXT=$(cat << parameters.file >> | <<include(scripts/sanitise_slack_alert.sh)>>
+          SLACK_TXT=$(cat << parameters.file >> | <<include(scripts/sanitise_slack_alert.sh)>>)
           echo "export << parameters.env_var >>='${SLACK_TXT}'" >> $BASH_ENV
         else
           echo "File not found: << parameters.file >>"
