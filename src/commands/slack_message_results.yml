@@ -21,7 +21,7 @@ steps:
           echo "Processing file: << parameters.file >>"
           echo "Exporting to env var: << parameters.env_var >>"
           SLACK_TXT=$(cat << parameters.file >> | \
-            sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g;' | \
+            sed "s/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/'/\&#39;/g;" | \
             jq -Rs . | \
             sed -E 's/("$)|(^")//g')
           echo "export << parameters.env_var >>='${SLACK_TXT}'" >> $BASH_ENV
