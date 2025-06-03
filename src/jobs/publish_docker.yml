@@ -11,29 +11,15 @@ parameters:
   publish_latest_tag:
     type: boolean
     default: true
-  container_registry_server:
-    description: >
-      The repository to push the image to. This should be the same as the image_name
-      but without the image name. For example, if the image_name is
-      quay.io/hmpps/my-app, then the container_registry_server should be quay.io.
-      Alternatively, you can set this to a different repository if you want to push
-      the image to a different location. e.g. docker.io
-    type: string
-    default: "quay.io"
 steps:
   - checkout
   - setup_remote_docker
   - recall_container_image
+  - docker_login:
+      image_name: "${IMAGE_NAME}"
   - run:
       name: Publish image to repository
       command: |
-        if [[ << parameters.container_registry_server >> != "quay.io" ]]; then
-          echo "Logging into << parameters.container_registry_server >>"
-          docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" << parameters.container_registry_server >>
-        else
-          echo "Logging into quay.io"
-          docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
-        fi
         docker push "${IMAGE_NAME}:${APP_VERSION}"
 
   - when:
