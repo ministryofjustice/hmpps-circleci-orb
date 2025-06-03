@@ -1,0 +1,35 @@
+---
+description: Docker login - authenticate with a container registry.
+parameters:
+  image_name:
+    type: string
+    description: "The fully qualified name of the image, used to determine how to authenticate to the registry."
+steps:
+  - run:
+      name: docker login
+      command: |
+        # Split the image name into registry, repository and image variables.
+        IFS="/" read -r REGISTRY REPOSITORY IMAGE \<<< "<< parameters.image_name >>"
+        # None quay.io registries need DOCKER_USERNAME and DOCKER_PASSWORD available via context.
+        if [[ $REGISTRY != "quay.io" ]]; then
+          echo "Logging into ${REGISTRY}"
+          docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" ${REGISTRY}
+        # ECR registries need OIDC token and ECR_ROLE_TO_ASSUME, ECR_REGION, ECR_REGISTRY_ID. See cloudplatform guide and ECR terraform module.
+        elif [[ $REGISTRY == *".dkr.ecr."* ]]; then
+          echo "Logging into ECR"
+          read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN \<<EOF
+          $(aws sts assume-role-with-web-identity \
+          --role-arn "${ECR_ROLE_TO_ASSUME}" \
+          --role-session-name "CI" \
+          --web-identity-token "${CIRCLE_OIDC_TOKEN_V2}" \
+          --duration-seconds "900" \
+          --region "${ECR_REGION}" \
+          --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+          --output text)
+          EOF
+          export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+          aws ecr get-login-password --region ${ECR_REGION} | docker login --username AWS --password-stdin "${ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com"
+        else
+          echo "Logging into quay.io"
+          docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+        fi
