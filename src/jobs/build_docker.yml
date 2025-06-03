@@ -8,6 +8,12 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+    description: >
+      The name of the image to build. This should be a fully qualified image name, including the registry.
+      Format is [registry]/[repository]/[image_name].
+      e.g. quay.io/hmpps/my-app or docker.io/ministryofjustice/my-app
+      ECR the registry contains the account id and region,
+      e.g. 123456789012.dkr.ecr.eu-west-2.amazonaws.com/my-repo/my-app
   dockerfile_dir:
     type: string
     default: "."
@@ -71,6 +77,7 @@ steps:
   - checkout
   - setup_remote_docker:
       docker_layer_caching: true
+  - install_aws_cli
   - create_app_version
   - run:
       name: Create IMAGE_NAME env var
@@ -127,11 +134,11 @@ steps:
   - when:
       condition: <<parameters.publish>>
       steps:
+        - docker_login:
+            image_name: "${IMAGE_NAME}"
         - run:
             name: Publish image to repository
             command: |
-              #push to quay.io
-              docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
               docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:latest"
               docker push "<< parameters.image_name >>:${APP_VERSION}"
               docker push "<< parameters.image_name >>:latest"
@@ -143,6 +150,7 @@ steps:
                 docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
                 docker push "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
               fi
+              docker logout
 
   - when:
       condition: << parameters.jira_update >>

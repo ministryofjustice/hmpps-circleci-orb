@@ -14,11 +14,13 @@ parameters:
 steps:
   - checkout
   - setup_remote_docker
+  - install_aws_cli
   - recall_container_image
+  - docker_login:
+      image_name: "${IMAGE_NAME}"
   - run:
       name: Publish image to repository
       command: |
-        docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
         docker push "${IMAGE_NAME}:${APP_VERSION}"
 
   - when:
@@ -29,3 +31,4 @@ steps:
             command: |
               docker tag "${IMAGE_NAME}:${APP_VERSION}" "${IMAGE_NAME}:latest"
               docker push "${IMAGE_NAME}:latest"
+              docker logout

@@ -8,6 +8,12 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/${CIRCLE_PROJECT_REPONAME}"
+    description: >
+      The name of the image to build. This should be a fully qualified image name, including the registry.
+      Format is [registry]/[repository]/[image_name].
+      e.g. quay.io/hmpps/my-app or docker.io/ministryofjustice/my-app
+      ECR the registry contains the account id and region,
+      e.g. 123456789012.dkr.ecr.eu-west-2.amazonaws.com/my-repo/my-app
   dockerfile_dir:
     type: string
     default: "."
@@ -60,6 +66,7 @@ steps:
   - checkout
   - setup_remote_docker:
       docker_layer_caching: true
+  - install_aws_cli
   - create_app_version
   - run:
       name: Create IMAGE_NAME env var
@@ -76,9 +83,8 @@ steps:
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker run --rm --privileged tonistiigi/binfmt --install all
         docker buildx create --use multi-arch-build --platform linux/arm64,linux/amd64 --name="${CIRCLE_PROJECT_REPONAME}"
-  - run:
-      name: quay.io login
-      command: docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+  - docker_login:
+      image_name: "${IMAGE_NAME}"
   - run:
       name: Build and publish container image
       no_output_timeout: << parameters.no_output_timeout >>
@@ -100,6 +106,7 @@ steps:
           --label "build.gitref=${CIRCLE_SHA1}" \
           --push \
           << parameters.additional_docker_build_args >>
+        docker logout
 
   - when:
       condition: << parameters.snyk-scan >>
