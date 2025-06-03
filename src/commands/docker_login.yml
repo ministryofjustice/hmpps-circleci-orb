@@ -8,28 +8,46 @@ steps:
   - run:
       name: docker login
       command: |
-        # Split the image name into registry, repository and image variables.
+        # Split the image name into registry, repository, and image
         IFS="/" read -r REGISTRY REPOSITORY IMAGE \<<< "<< parameters.image_name >>"
-        # None quay.io registries need DOCKER_USERNAME and DOCKER_PASSWORD available via context.
-        if [[ $REGISTRY != "quay.io" ]]; then
-          echo "Logging into ${REGISTRY}"
-          docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}" ${REGISTRY}
-        # ECR registries need OIDC token and ECR_ROLE_TO_ASSUME, ECR_REGION, ECR_REGISTRY_ID. See cloudplatform guide and ECR terraform module.
-        elif [[ $REGISTRY == *".dkr.ecr."* ]]; then
-          echo "Logging into ECR"
-          read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN \<<EOF
-          $(aws sts assume-role-with-web-identity \
-          --role-arn "${ECR_ROLE_TO_ASSUME}" \
-          --role-session-name "CI" \
-          --web-identity-token "${CIRCLE_OIDC_TOKEN_V2}" \
-          --duration-seconds "900" \
-          --region "${ECR_REGION}" \
-          --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
-          --output text)
-          EOF
+
+        echo "Registry detected: $REGISTRY"
+
+        # ECR registries need special handling
+        if [[ "$REGISTRY" == *".dkr.ecr."* ]]; then
+          echo "Logging into ECR: $REGISTRY"
+          if [[ -z "${ECR_ROLE_TO_ASSUME:-}" || -z "${ECR_REGION:-}" || -z "${ECR_REGISTRY_ID:-}" || -z "${CIRCLE_OIDC_TOKEN_V2:-}" ]]; then
+            echo "Missing required ECR environment variables." >&2
+            exit 1
+          fi
+          read -r AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN \<<<"$(
+            aws sts assume-role-with-web-identity \
+              --role-arn "$ECR_ROLE_TO_ASSUME" \
+              --role-session-name "CI" \
+              --web-identity-token "$CIRCLE_OIDC_TOKEN_V2" \
+              --duration-seconds "900" \
+              --region "$ECR_REGION" \
+              --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+              --output text
+          )"
           export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
-          aws ecr get-login-password --region ${ECR_REGION} | docker login --username AWS --password-stdin "${ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com"
-        else
+          aws ecr get-login-password --region "$ECR_REGION" | docker login --username AWS --password-stdin "${ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com"
+
+        # quay.io registry
+        elif [[ "$REGISTRY" == "quay.io" ]]; then
           echo "Logging into quay.io"
-          docker login -u="${QUAYIO_USERNAME}" -p="${QUAYIO_PASSWORD}" quay.io
+          if [[ -z "${QUAYIO_USERNAME:-}" || -z "${QUAYIO_PASSWORD:-}" ]]; then
+            echo "Missing QUAYIO_USERNAME or QUAYIO_PASSWORD." >&2
+            exit 1
+          fi
+          docker login -u="$QUAYIO_USERNAME" -p="$QUAYIO_PASSWORD" quay.io
+
+        # Other registries
+        else
+          echo "Logging into $REGISTRY"
+          if [[ -z "${DOCKER_USERNAME:-}" || -z "${DOCKER_PASSWORD:-}" ]]; then
+            echo "Missing DOCKER_USERNAME or DOCKER_PASSWORD." >&2
+            exit 1
+          fi
+          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$REGISTRY"
         fi
