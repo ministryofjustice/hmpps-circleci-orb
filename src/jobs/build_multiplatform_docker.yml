@@ -11,9 +11,9 @@ parameters:
     description: >
       The name of the image to build. This should be a fully qualified image name, including the registry.
       Format is [registry]/[repository]/[image_name].
-      e.g. quay.io/hmpps/my-app or docker.io/hmpps/my-app or ghcr.io/hmpps/my-app
+      e.g. quay.io/hmpps/my-app or docker.io/hmpps/my-app or ghcr.io/ministryofjustice/my-app
       ECR the registry contains the account id and region,
-      e.g. 123456789012.dkr.ecr.eu-west-2.amazonaws.com/hmpps/my-app
+      e.g. 123456789012.dkr.ecr.eu-west-2.amazonaws.com/my-repo/my-app
   dockerfile_dir:
     type: string
     default: "."
