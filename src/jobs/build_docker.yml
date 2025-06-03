@@ -149,6 +149,7 @@ steps:
                 docker tag "<< parameters.image_name >>:${APP_VERSION}" "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
                 docker push "<< parameters.image_name >>:<< parameters.additional_docker_tag >>"
               fi
+              docker logout
 
   - when:
       condition: << parameters.jira_update >>

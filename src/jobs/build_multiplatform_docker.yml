@@ -105,6 +105,7 @@ steps:
           --label "build.gitref=${CIRCLE_SHA1}" \
           --push \
           << parameters.additional_docker_build_args >>
+        docker logout
 
   - when:
       condition: << parameters.snyk-scan >>

@@ -30,3 +30,4 @@ steps:
             command: |
               docker tag "${IMAGE_NAME}:${APP_VERSION}" "${IMAGE_NAME}:latest"
               docker push "${IMAGE_NAME}:latest"
+              docker logout
