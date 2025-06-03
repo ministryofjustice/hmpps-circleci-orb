@@ -14,6 +14,7 @@ parameters:
 steps:
   - checkout
   - setup_remote_docker
+  - install_aws_cli
   - recall_container_image
   - docker_login:
       image_name: "${IMAGE_NAME}"
