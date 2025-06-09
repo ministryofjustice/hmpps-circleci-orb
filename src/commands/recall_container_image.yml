@@ -12,7 +12,7 @@ steps:
   - run:
       name: Extract saved container image
       command: docker load --input docker_cache/build_image.tar
-  - mem/recall:
+  - recall:
       env_var: IMAGE_NAME
-  - mem/recall:
+  - recall:
       env_var: APP_VERSION

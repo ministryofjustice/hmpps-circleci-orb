@@ -78,7 +78,7 @@ steps:
   - k8s_setup
   - install_helm
   - install_aws_cli
-  - mem/recall:
+  - recall:
       env_var: APP_VERSION
   - when:
       condition: <<parameters.show_changelog>>
@@ -93,7 +93,7 @@ steps:
             name: Store deployment changelog
             command: |
               echo 'export DEPLOYMENT_CHANGELOG=$(<.deployment_changelog)' >> $BASH_ENV
-  - mem/recall:
+  - recall:
       env_var: APP_VERSION
   - run:
       name: Deploy to << parameters.env >>

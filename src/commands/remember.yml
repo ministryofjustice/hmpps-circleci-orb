@@ -1,0 +1,27 @@
+---
+description: |
+  Exports an environment variable that can be read throughout the remainder
+  of this job, and persists the value to be `recall`ed in a downstream job.
+parameters:
+  env_var:
+    description: The environment variable to set.
+    type: string
+  value:
+    description: The value to save to the variable.
+    type: string
+steps:
+  - run:
+      name: Remember << parameters.env_var >>
+      command: |
+        export << parameters.env_var >>="<< parameters.value >>"
+        exporter="export << parameters.env_var >>=${<< parameters.env_var >>}"
+        echo $exporter >> $BASH_ENV
+        remember_file="/tmp/circleci_remember/.circleci_remember/<< parameters.env_var >>"
+        mkdir -p $(dirname $remember_file)
+        echo $exporter >> $remember_file
+        echo Remembering << parameters.env_var >> = ${<< parameters.env_var >>}
+  - persist_to_workspace:
+      # TODO: platform agnostic
+      root: /tmp/circleci_remember
+      paths:
+        - .circleci_remember/<< parameters.env_var >>

@@ -18,7 +18,7 @@ parameters:
     description: "Tell sentry-cli to work out the commits on this release - this should only be done ONCE, ideally when you push to DEV."
 steps:
   - checkout
-  - mem/recall:
+  - recall:
       env_var: APP_VERSION
   - run:
       name: Sentry - Setup environment

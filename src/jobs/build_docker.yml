@@ -84,7 +84,7 @@ steps:
       command: |
         IMAGE_NAME="<< parameters.image_name >>"
         echo "export IMAGE_NAME=$IMAGE_NAME" >> $BASH_ENV
-  - mem/remember:
+  - remember:
       env_var: IMAGE_NAME
       value: "${IMAGE_NAME}"
   - run:
