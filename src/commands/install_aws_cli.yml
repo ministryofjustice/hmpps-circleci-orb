@@ -2,11 +2,11 @@
 description: "Install AWS cli"
 parameters:
   version:
-    type: enum
-    default: "2"
-    enum:
-      - "1"
-      - "2"
+    default: latest
+    description: >
+      Select a specific version of the AWS v2 CLI. By default the latest version
+      will be used.
+    type: string
 steps:
   - aws-cli/install:
       version: <<parameters.version>>
