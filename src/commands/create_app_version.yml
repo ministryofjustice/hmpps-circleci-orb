@@ -3,9 +3,6 @@ description: >
   Creates an application version string, formatted
   [DATE].[CIRCLE_BUILD_NUM].[SHORT_SHA1]
   e.g 2020-04-24.487.fb30e99"
-  Also uses mem/rememborb orb to remember the
-  version as the env var APP_VERSION - which can
-  be recalled in subsequent steps or jobs e.g. mem/recall
 steps:
   - run:
       name: Create app version string
@@ -15,6 +12,6 @@ steps:
         VERSION=${DATE}.${CIRCLE_BUILD_NUM}.${SHORT_SHA1}
         echo "Created version string: ${VERSION}"
         echo "export VERSION=$VERSION" >> $BASH_ENV
-  - mem/remember:
+  - remember:
       env_var: APP_VERSION
       value: "${VERSION}"

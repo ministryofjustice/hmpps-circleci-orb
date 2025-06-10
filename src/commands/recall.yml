@@ -1,0 +1,18 @@
+---
+description: |
+  Recalls an environment variable that was previously `remember`ed, and
+  exports it so it can be read throughout the remainder of this job.
+parameters:
+  env_var:
+    description: The environment variable to recall.
+    type: string
+steps:
+  - attach_workspace:
+      at: /tmp/circleci_remember
+  - run:
+      name: Recall << parameters.env_var >>
+      command: |
+        exporter=$(cat /tmp/circleci_remember/.circleci_remember/<< parameters.env_var >>)
+        $exporter
+        echo $exporter >> $BASH_ENV
+        echo Recalled << parameters.env_var >> = ${<< parameters.env_var >>}

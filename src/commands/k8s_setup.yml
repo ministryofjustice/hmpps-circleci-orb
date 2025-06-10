@@ -1,6 +1,11 @@
 ---
 description: "Install kubectl and configure"
 parameters:
+  version:
+    default: latest
+    description: |
+      specify version using vX.Y.Z (e.g., v1.29.0) format.
+    type: string
   cluster-name:
     type: env_var_name
     default: KUBE_ENV_NAME
@@ -20,7 +25,8 @@ parameters:
     type: string
     default: circleci
 steps:
-  - kubernetes/install
+  - kubernetes/install_kubectl:
+      kubectl_version: <<parameters.version>>
   - run:
       name: Setup kubectl
       command: |
